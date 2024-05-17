@@ -1,9 +1,14 @@
 plugins {
     id 'java'
 }
+apply plugin: 'java'
+apply plugin: 'application'
 
 group = 'pwr.po.grupa7'
 version = '1.0-SNAPSHOT'
+
+//noinspection GroovyUnusedAssignment
+mainClassName = 'Ant_Colony'
 
 repositories {
     mavenCentral()
