@@ -36,9 +36,9 @@ public class Display extends JPanel {
 		super.paintComponent(g);
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		for (Object object : objects) {
-			g.setColor(object.getColor());
-			g.fillRect(object.getX(), object.getY(), object.getSize(), object.getSize());
+		for (int i = 0; i < objects.size(); i++) {
+			g.setColor(objects.get(i).getColor());
+			g.fillRect(objects.get(i).getX(), objects.get(i).getY(), objects.get(i).getSize(), objects.get(i).getSize());
 		}
 	}
 }
