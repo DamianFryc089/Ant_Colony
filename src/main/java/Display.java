@@ -8,15 +8,23 @@ public class Display extends JPanel {
 	Display(String[] args, ArrayList<Object> objects)
 	{
 		this.objects = objects;
-		// Tworzenie okna
+			// Tworzenie okna
 		JFrame frame = new JFrame("Ant Colony");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
-		if(args.length != 2) {
+
+			// Znalezienie wartości wymiarów okna z argumentów
+		int[] size = {0, 0};
+		if (args.length == 2 ) {
+			try{
+				size[0] = Integer.parseInt(args[0]);
+				size[1] = Integer.parseInt(args[1]);
+			} catch (NumberFormatException ignored) {}
+		}
+
+		if(size[0] > 250 && size[1] > 250) {
 			// Okno w trybie okienkowym
-			int width = 500;
-			int height = 450;
-			frame.setSize(new Dimension(width + 16, height + 39)); // args -> [int, int] // board size + borders?
+			frame.setSize(new Dimension(size[0] + 16, size[1] + 39));
 			frame.setVisible(true);
 			frame.getContentPane().add(this);
 			frame.setVisible(true);
