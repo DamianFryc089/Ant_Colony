@@ -1,8 +1,8 @@
 import java.awt.*;
 import java.util.Random;
 
-public class TestowyKwadrat extends Object{
-    TestowyKwadrat(int mapWidth, int mapHeight, int x, int y, int size, Random random)
+public class Testowy_Kwadrat extends Object{
+    Testowy_Kwadrat(int mapWidth, int mapHeight, int x, int y, int size, Random random)
     {
         super(mapWidth, mapHeight, x, y, size, random);
         xz = random.nextInt(1,4);

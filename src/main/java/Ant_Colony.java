@@ -23,7 +23,7 @@ public class Ant_Colony extends JPanel {
             int size = random.nextInt(1,20);
             int wid = random.nextInt(0, mapWidth -size);
             int hei = random.nextInt(0, mapHeight -size);
-            objects.add(new TestowyKwadrat(mapWidth, mapHeight, wid, hei, size, random));
+            objects.add(new Testowy_Kwadrat(mapWidth, mapHeight, wid, hei, size, random));
         }
 
 //         Timer z pętlą symulacji na innym wątku
