@@ -5,9 +5,12 @@ import java.util.ArrayList;
 public class Display extends JPanel {
 
 	ArrayList<Object> objects;
-	Display(String[] args, ArrayList<Object> objects)
+	GameMap gameMap;
+	Display(String[] args, ArrayList<Object> objects, GameMap gameMap)
 	{
 		this.objects = objects;
+		this.gameMap = gameMap;
+
 			// Tworzenie okna
 		JFrame frame = new JFrame("Ant Colony");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,8 +45,9 @@ public class Display extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(Color.black);
-		g.fillRect(0, 0, getWidth(), getHeight());
+//		g.setColor(Color.black);
+//		g.fillRect(0, 0, getWidth(), getHeight());
+		g.drawImage(gameMap.image, 0, 0, null);
 		for (int i = 0; i < objects.size(); i++) {
 			g.setColor(objects.get(i).getColor());
 			g.fillRect(objects.get(i).getX(), objects.get(i).getY(), objects.get(i).getSize(), objects.get(i).getSize());
