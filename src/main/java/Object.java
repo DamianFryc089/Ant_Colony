@@ -5,16 +5,10 @@ import java.util.Random;
 public class Object {
     protected int x;
     protected int y;
-    protected int xz;
-    protected int yz;
     protected int size;
-    protected int mapWidth;
-    protected int mapHeight;
 
-    Object(int mapWidth, int mapHeight, int x, int y, int size, Random random)
+    Object(int x, int y, int size, Random random, GameMap gameMap)
     {
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
         this.x = x;
         this.y = y;
         this.size = size;

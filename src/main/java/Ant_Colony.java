@@ -15,15 +15,15 @@ public class Ant_Colony extends JPanel {
         objects = new ArrayList<>();
         gameMap = new GameMap();
         display = new Display(args, objects, gameMap);
-
         random = new Random(3);
-        gameMap.generateMap(random, display.getWidth(), display.getHeight());
+        int size = 1;//random.nextInt(1,20);
 
+
+        gameMap.generateMap(random, display.getWidth(), display.getHeight());
         for (int i = 0; i < 100 ; i++) {
-            int size = random.nextInt(1,20);
-            int wid = random.nextInt(0, gameMap.getWidth() - size);
-            int hei = random.nextInt(0, gameMap.getHeight() - size);
-            objects.add(new Testowy_Kwadrat(gameMap.getWidth(), gameMap.getHeight(), wid, hei, size, random));
+            int wid = random.nextInt(10, gameMap.getWidth() - 10);
+            int hei = random.nextInt(10, gameMap.getHeight() - 10);
+            objects.add(new Testowy_Kwadrat(wid, hei, size, random, gameMap));
         }
 
 //         Timer z pętlą symulacji na innym wątku

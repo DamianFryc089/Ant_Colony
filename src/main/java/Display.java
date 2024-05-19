@@ -17,7 +17,7 @@ public class Display extends JPanel {
 		frame.setResizable(false);
 
 			// Znalezienie wartości wymiarów okna z argumentów
-		int[] size = {0, 0};
+		int[] size = {500, 500};
 		if (args.length == 2 ) {
 			try{
 				size[0] = Integer.parseInt(args[0]);
@@ -25,7 +25,7 @@ public class Display extends JPanel {
 			} catch (NumberFormatException ignored) {}
 		}
 
-		if(size[0] > 250 && size[1] > 250) {
+		if(true){//size[0] > 250 && size[1] > 250) {
 			// Okno w trybie okienkowym
 			frame.setSize(new Dimension(size[0] + 16, size[1] + 39));
 			frame.setVisible(true);
@@ -45,8 +45,8 @@ public class Display extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-//		g.setColor(Color.black);
-//		g.fillRect(0, 0, getWidth(), getHeight());
+		//g.setColor(Color.black);
+		//g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(gameMap.image, 0, 0, null);
 		for (int i = 0; i < objects.size(); i++) {
 			g.setColor(objects.get(i).getColor());

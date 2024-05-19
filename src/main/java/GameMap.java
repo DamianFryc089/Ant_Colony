@@ -24,7 +24,7 @@ public class GameMap {
 
 					// W teorii żeby mapa nie była zbyt jałowa powinno być tło trochę losowe,
 					// ale nie wiem jak to zrobić żeby okay wyglądało
-				int minRand = -20;
+				/*int minRand = -20;
 				int maxRand = 20;
 				switch (random.nextInt(0,1)) {
 					case 0:
@@ -51,7 +51,8 @@ public class GameMap {
 								179 + random.nextInt(minRand,maxRand-minRand),
 								37 + random.nextInt(minRand,maxRand-minRand)));
 						break;
-				}
+				}*/
+				tiles[x][y].setTileColor(new Color(255, 255, 255));
 			}
 		}
 		generateImage();
