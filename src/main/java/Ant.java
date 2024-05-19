@@ -2,9 +2,12 @@ import java.awt.*;
 import java.util.Random;
 
 public class Ant extends Object{
+    static int antCounter = 0;
+    boolean carryFood = false;
     int p=4;
     Ant(int x, int y, int size, Random random, GameMap gameMap) {
         super(x, y, size, random, gameMap);
+        antCounter++;
     }
 
     @Override
