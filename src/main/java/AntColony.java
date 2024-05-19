@@ -33,6 +33,7 @@ public class AntColony extends JPanel {
     private class MainLoop extends TimerTask {
         @Override
         public void run() {
+            gameMap.decreaseScentValues(1);
             objects.forEach(Object::move);
             display.repaint();
         }
