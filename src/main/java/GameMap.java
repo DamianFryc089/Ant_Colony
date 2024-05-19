@@ -81,6 +81,23 @@ public class GameMap {
 		void setTileColor(Color newTileColor) {tileColor = newTileColor;}
 	}
 
+	void takeObject(Object objectToTake){
+		for(int x = 0; x < objectToTake.getSize(); x++){
+			for(int y = 0; y < objectToTake.getSize(); y++){
+				tiles[objectToTake.getX()+x][objectToTake.getY()+y].cellOccupant = null;
+			}
+		}
+	}
+
+	void placeObject(Object objectToPlace){
+		for(int x = 0; x < objectToPlace.getSize(); x++){
+			for(int y = 0; y < objectToPlace.getSize(); y++){
+				tiles[objectToPlace.getX()+x][objectToPlace.getY()+y].cellOccupant = objectToPlace;
+			}
+		}
+	}
+
+
 	int getWidth(){return width;}
 	int getHeight(){return height;}
 }
