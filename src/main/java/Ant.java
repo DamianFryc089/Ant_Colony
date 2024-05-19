@@ -1,20 +1,18 @@
 import java.awt.*;
 import java.util.Random;
 
-public class Testowy_Kwadrat extends Object{
-    GameMap gameMap;
+public class Ant extends Object{
     int p=4;
-    Random random;
-    Testowy_Kwadrat(int x, int y, int size, Random random, GameMap gameMap)
-    {
+    Ant(int x, int y, int size, Random random, GameMap gameMap) {
         super(x, y, size, random, gameMap);
-        this.gameMap=gameMap;
-        this.random=random;
     }
+
     @Override
     void move(){
+        gameMap.takeObject(this);
+
         int tab[] = {0,0,0,0};
-        int Tab[] = {0,0,0,0};
+        int Tab[] = {4,4,4,4};
         int z=0,m=0;
         gameMap.tiles[x][y].scentValue+=10;
         if(x+1 < gameMap.getWidth()){tab[0]=gameMap.tiles[x+1][y].scentValue;}
@@ -40,6 +38,8 @@ public class Testowy_Kwadrat extends Object{
         if(z==1&&x-1 > 0){x-=1;p=0;}
         if(z==2&&y+1 < gameMap.getHeight()){y+=1;p=3;}
         if(z==3&&y-1 > 0){y-=1;p=2;}
+
+        gameMap.placeObject(this);
     }
     @Override
     Color getColor() {return new Color(0,0,0);}
