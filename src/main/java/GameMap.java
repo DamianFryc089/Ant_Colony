@@ -1,11 +1,19 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameMap {
 	private int width, height;
 	Tile[][] tiles;
 	private BufferedImage backgroundImage, scentImage;
+	Random random;
+	ArrayList<Object> objects;
+
+	GameMap(Random random, ArrayList<Object> objects) {
+		this.random = random;
+		this.objects = objects;
+	}
 
 	public class Tile{
 		int x, y;
@@ -36,7 +44,7 @@ public class GameMap {
 		}
 	}
 
-	void generateMap(Random random, int width, int height) {
+	void generateMap(int width, int height) {
 		this.width = width;
 		this.height = height;
 		tiles = new Tile[width][height];
@@ -47,7 +55,7 @@ public class GameMap {
 			for (int y = 0; y < height; y++) {
 				tiles[x][y] = new Tile(x, y);
 				tiles[x][y].setTileColor(new Color(255, 255, 255));
-//				tiles[x][y].setTileColor(new Color(31, 135, 23));
+//				tiles[x][y].setTileColor(new Color(57, 152, 49));
 
 					// W teorii żeby mapa nie była zbyt jałowa powinno być tło trochę losowe,
 					// ale nie wiem jak to zrobić żeby okay wyglądało
@@ -82,6 +90,12 @@ public class GameMap {
 			}
 		}
 		generateImage();
+		objects.add(new AntNest(
+				random.nextInt(50,width - 100),
+				random.nextInt(50,height - 100),
+				25, random, this, objects));
+		generateWalls(100);
+		generateFoodField(25);
 	}
 
 	void generateImage(){
@@ -99,7 +113,6 @@ public class GameMap {
 	BufferedImage getScentImage() {
 		return scentImage;
 	}
-
 
 	void takeObject(Object objectToTake){
 		for(int x = 0; x < objectToTake.getSize(); x++){
@@ -125,6 +138,53 @@ public class GameMap {
 		}
 	}
 
+	void generateWalls(int count){
+		while (count > 0) {
+			int randX = random.nextInt(width);
+			int randY = random.nextInt(height);
+
+			int verticalDirection = random.nextBoolean() ? -1 : 1;
+
+			while (true) {
+				if (randX < width && randY >= 0 && randY < height && tiles[randX][randY].cellOccupant == null) {
+					tiles[randX][randY].cellOccupant = new Wall(randX, randY, 1, random, this);
+					objects.add(tiles[randX][randY].cellOccupant);
+					count--;
+				}
+				else break;
+
+					// losowanie kolejnego muru lub przerwy
+				int rand = random.nextInt(100);
+				if (rand < 48) randX++;
+				else if (rand < 96) randY+=verticalDirection;
+				else break;
+			}
+		}
+	}
+	void generateFoodField(int size){
+		int randX = random.nextInt(50, width - 100);
+		int randY = random.nextInt(50, height - 100);
+
+		for (int i = 0; i < size; i++) {
+			for (int j = size - i; j < size + i; j++) {
+				tryToGenerateFood(randX+j, randY + i);
+			}
+		}
+		for (int i = 0; i < size; i++) {
+			for (int j = i; j < 2*size - i ; j++) {
+				tryToGenerateFood(randX+j, randY + i + size);
+			}
+		}
+	}
+	boolean tryToGenerateFood(int x, int y)
+	{
+		if (x >= 0 && x < width && y >= 0 && y < height && tiles[x][y].cellOccupant == null) {
+			tiles[x][y].cellOccupant = new Food(x, y, 1, random, this);
+			objects.add(tiles[x][y].cellOccupant);
+			return true;
+		}
+		return false;
+	}
 
 	int getWidth(){return width;}
 	int getHeight(){return height;}
