@@ -26,7 +26,7 @@ public class Ant extends Object{
         gameMap.tiles[x][y].increaseScentValue(10);
         if(x+1 < gameMap.getWidth()){tab[0]=gameMap.tiles[x+1][y].getScentValue();}
         if(x-1 > 0){tab[1]=gameMap.tiles[x-1][y].getScentValue();}
-        if(y+1 < gameMap.getWidth()){tab[2]=gameMap.tiles[x][y+1].getScentValue();}
+        if(y+1 < gameMap.getHeight()){tab[2]=gameMap.tiles[x][y+1].getScentValue();}
         if(y-1 > 0){tab[3]=gameMap.tiles[x][y-1].getScentValue();}
         for(int i=0; i<4; i++)
         {
