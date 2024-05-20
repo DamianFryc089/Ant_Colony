@@ -47,9 +47,10 @@ public class Display extends JPanel {
 		super.paintComponent(g);
 		g.drawImage(gameMap.getBackgroundImage(), 0, 0, null);
 		g.drawImage(gameMap.getScentImage(),0,0, null);
-		for (int i = 0; i < objects.size(); i++) {
-			g.setColor(objects.get(i).getColor());
-			g.fillRect(objects.get(i).getX(), objects.get(i).getY(), objects.get(i).getSize(), objects.get(i).getSize());
-		}
+		g.drawImage(gameMap.getObjectsImage(),0,0,null);
+//		for (int i = 0; i < objects.size(); i++) {
+//			g.setColor(objects.get(i).getColor());
+//			g.fillRect(objects.get(i).getX(), objects.get(i).getY(), objects.get(i).getSize(), objects.get(i).getSize());
+//		}
 	}
 }
