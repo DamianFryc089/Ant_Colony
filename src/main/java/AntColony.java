@@ -4,50 +4,43 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Ant_Colony extends JPanel {
+public class AntColony extends JPanel {
     private Random random;
     private ArrayList<Object> objects;
     private Display display;
     private GameMap gameMap;
+    private final int targetFPS = 60;
+    private final int scale = 1; // max 4? Może wywalić error jak będzie więcej
 
-    public Ant_Colony(String[] args)
-    {
-        objects = new ArrayList<>();
-        gameMap = new GameMap();
-        display = new Display(args, objects, gameMap);
+    public AntColony(String[] args) {
         random = new Random(3);
-        int size = 2;//random.nextInt(1,20);
+        objects = new ArrayList<>();
+        gameMap = new GameMap(random, objects, scale);
+        display = new Display(args, objects, gameMap);
+        int size = 1;//random.nextInt(1,20);
 
-
-        gameMap.generateMap(random, display.getWidth(), display.getHeight());
-        for (int i = 0; i < 1 ; i++) {
+        gameMap.generateMap(display.getWidth(), display.getHeight());
+        for (int i = 0; i < 100 ; i++) {
             int wid = random.nextInt(10, gameMap.getWidth() - 10);
             int hei = random.nextInt(10, gameMap.getHeight() - 10);
-            objects.add(new Testowy_Kwadrat(250, 250, size, random, gameMap));
+            objects.add(new Ant(wid, hei, size, random, gameMap));
         }
 
 //         Timer z pętlą symulacji na innym wątku
         Timer timer = new Timer();
-        timer.schedule(new MainLoop(), 0, (long) 2000);
+        timer.schedule(new MainLoop(), 0, (long) 1000/targetFPS);
     }
 
     private class MainLoop extends TimerTask {
         @Override
         public void run() {
+            gameMap.decreaseScentValues(10);
             objects.forEach(Object::move);
             display.repaint();
-            for (int i = 0; i < gameMap.getWidth() ; i++){
-                for (int j = 0; j < gameMap.getHeight() ; j++){//zmniejsza zapach
-                    if(gameMap.tiles[i][j].scentValue>0) {
-                        gameMap.tiles[i][j].scentValue -= 1;
-                    }
-                }
-            }
-
         }
     }
 
     public static void main(String[] args) {
-        Ant_Colony simulation = new Ant_Colony(args);
+        AntColony simulation = new AntColony(args);
     }
 }
