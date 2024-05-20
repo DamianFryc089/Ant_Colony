@@ -9,11 +9,13 @@ public class AntColony extends JPanel {
     private ArrayList<Object> objects;
     private Display display;
     private GameMap gameMap;
+    private final int targetFPS = 60;
+    private final int scale = 1; // max 4? Może wywalić error jak będzie więcej
 
     public AntColony(String[] args) {
-        random = new Random();
+        random = new Random(3);
         objects = new ArrayList<>();
-        gameMap = new GameMap(random, objects);
+        gameMap = new GameMap(random, objects, scale);
         display = new Display(args, objects, gameMap);
         int size = 1;//random.nextInt(1,20);
 
@@ -26,7 +28,7 @@ public class AntColony extends JPanel {
 
 //         Timer z pętlą symulacji na innym wątku
         Timer timer = new Timer();
-        timer.schedule(new MainLoop(), 0, (long) 1000/60);
+        timer.schedule(new MainLoop(), 0, (long) 1000/targetFPS);
     }
 
     private class MainLoop extends TimerTask {
