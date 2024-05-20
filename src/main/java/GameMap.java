@@ -6,13 +6,15 @@ import java.util.Random;
 public class GameMap {
 	private int width, height;
 	Tile[][] tiles;
-	private BufferedImage backgroundImage, scentImage;
+	private BufferedImage backgroundImage, scentImage, objectsImage;
 	Random random;
 	ArrayList<Object> objects;
+	int scale;
 
-	GameMap(Random random, ArrayList<Object> objects) {
+	GameMap(Random random, ArrayList<Object> objects, int scale) {
 		this.random = random;
 		this.objects = objects;
+		this.scale = scale;
 	}
 
 	public class Tile{
@@ -44,12 +46,13 @@ public class GameMap {
 		}
 	}
 
-	void generateMap(int width, int height) {
-		this.width = width;
-		this.height = height;
+	void generateMap(int frameWidth, int frameHeight) {
+		this.width = frameWidth/scale;
+		this.height = frameHeight/scale;
 		tiles = new Tile[width][height];
 		backgroundImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		scentImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		objectsImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -91,8 +94,8 @@ public class GameMap {
 		}
 		generateImage();
 		objects.add(new AntNest(
-				random.nextInt(50,width - 100),
-				random.nextInt(50,height - 100),
+				random.nextInt(width/10,width - width/5 - 25),
+				random.nextInt(height/10,height - height/5 - 25),
 				25, random, this, objects));
 		generateWalls(100);
 		generateFoodField(25);
@@ -107,17 +110,38 @@ public class GameMap {
 	}
 
 	BufferedImage getBackgroundImage() {
-		return backgroundImage;
+
+		return scaleImage(backgroundImage);
 	}
 
 	BufferedImage getScentImage() {
-		return scentImage;
+		return scaleImage(scentImage);
+	}
+
+	BufferedImage getObjectsImage() {
+		return scaleImage(objectsImage);
+	}
+
+	BufferedImage scaleImage(BufferedImage imageToScale) {
+		if (scale == 1) return imageToScale;
+		BufferedImage scaledImage = new BufferedImage(imageToScale.getWidth()*scale, imageToScale.getHeight()*scale, BufferedImage.TYPE_INT_ARGB);
+		for (int x = 0; x < imageToScale.getWidth(); x++) {
+			for (int y = 0; y < imageToScale.getHeight(); y++) {
+				for (int i = 0; i < scale; i++) {
+					for (int j = 0; j < scale; j++) {
+						scaledImage.setRGB(x*scale+i, y*scale+j, imageToScale.getRGB(x,y));
+					}
+				}
+			}
+		}
+		return scaledImage;
 	}
 
 	void takeObject(Object objectToTake){
 		for(int x = 0; x < objectToTake.getSize(); x++){
 			for(int y = 0; y < objectToTake.getSize(); y++){
 				tiles[objectToTake.getX()+x][objectToTake.getY()+y].cellOccupant = null;
+				objectsImage.setRGB(objectToTake.getX()+x, objectToTake.getY()+y, new Color(255, 255, 255,0).getRGB());
 			}
 		}
 	}
@@ -126,6 +150,7 @@ public class GameMap {
 		for(int x = 0; x < objectToPlace.getSize(); x++){
 			for(int y = 0; y < objectToPlace.getSize(); y++){
 				tiles[objectToPlace.getX()+x][objectToPlace.getY()+y].cellOccupant = objectToPlace;
+				objectsImage.setRGB(objectToPlace.getX()+x, objectToPlace.getY()+y, objectToPlace.getColor().getRGB());
 			}
 		}
 	}
@@ -162,8 +187,8 @@ public class GameMap {
 		}
 	}
 	void generateFoodField(int size){
-		int randX = random.nextInt(50, width - 100);
-		int randY = random.nextInt(50, height - 100);
+		int randX = random.nextInt(width/10, width - width/5);
+		int randY = random.nextInt(height/10, height - height/5);
 
 		for (int i = 0; i < size; i++) {
 			for (int j = size - i; j < size + i; j++) {
