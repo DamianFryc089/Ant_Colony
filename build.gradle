@@ -8,7 +8,7 @@ group = 'pwr.po.grupa7'
 version = '1.0-SNAPSHOT'
 
 //noinspection GroovyUnusedAssignment
-mainClassName = 'Ant_Colony'
+mainClassName = 'AntColony'
 
 repositories {
     mavenCentral()
