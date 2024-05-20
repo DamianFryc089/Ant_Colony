@@ -16,19 +16,19 @@ public class Ant_Colony extends JPanel {
         gameMap = new GameMap();
         display = new Display(args, objects, gameMap);
         random = new Random(3);
-        int size = 1;//random.nextInt(1,20);
+        int size = 2;//random.nextInt(1,20);
 
 
         gameMap.generateMap(random, display.getWidth(), display.getHeight());
-        for (int i = 0; i < 100 ; i++) {
+        for (int i = 0; i < 1 ; i++) {
             int wid = random.nextInt(10, gameMap.getWidth() - 10);
             int hei = random.nextInt(10, gameMap.getHeight() - 10);
-            objects.add(new Testowy_Kwadrat(wid, hei, size, random, gameMap));
+            objects.add(new Testowy_Kwadrat(250, 250, size, random, gameMap));
         }
 
 //         Timer z pętlą symulacji na innym wątku
         Timer timer = new Timer();
-        timer.schedule(new MainLoop(), 0, (long) 1000/60);
+        timer.schedule(new MainLoop(), 0, (long) 2000);
     }
 
     private class MainLoop extends TimerTask {
@@ -36,6 +36,14 @@ public class Ant_Colony extends JPanel {
         public void run() {
             objects.forEach(Object::move);
             display.repaint();
+            for (int i = 0; i < gameMap.getWidth() ; i++){
+                for (int j = 0; j < gameMap.getHeight() ; j++){//zmniejsza zapach
+                    if(gameMap.tiles[i][j].scentValue>0) {
+                        gameMap.tiles[i][j].scentValue -= 1;
+                    }
+                }
+            }
+
         }
     }
 
