@@ -163,6 +163,29 @@ public class GameMap {
 			}
 		}
 	}
+	void spreadScentValues(int value, int maxvalue) {
+		int Tab[][];
+		Tab = new int[width][height];
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
+				//Tab[x][y]=0;
+				if(tiles[x][y].scentValue>0) {
+					Tab[x][y]=1;
+					if (x - 1 > 0) Tab[x - 1][y] = 1;
+					if (y - 1 > 0) Tab[x][y - 1] = 1;
+					if (x + 1 < width ) Tab[x + 1][y] = 1;
+					if (y + 1 < height) Tab[x][y + 1] = 1;
+				}
+			}
+		}
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
+				if(Tab[x][y]==1)tiles[x][y].decreaseScentValue(-1*value, maxvalue);;
+			}
+		}
+	}
+
+
 
 	void generateWalls(int count){
 		while (count > 0) {

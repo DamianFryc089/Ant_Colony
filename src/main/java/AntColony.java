@@ -34,7 +34,8 @@ public class AntColony extends JPanel {
     private class MainLoop extends TimerTask {
         @Override
         public void run() {
-            gameMap.decreaseScentValues(1, 50);
+            //gameMap.spreadScentValues(1,255);//rozprzestrzenianie się zapachu na sąsiednie pola
+            gameMap.decreaseScentValues(1, 255);
             objects.forEach(Object::move);
             display.repaint();
         }
