@@ -98,8 +98,8 @@ public class GameMap {
 				random.nextInt(width/10,width - width/5 - 25),
 				random.nextInt(height/10,height - height/5 - 25),
 				25, random, this, objects));
-		generateWalls(100);
-		generateFoodField(25);
+//		generateWalls(100);
+//		generateFoodField(25);
 	}
 
 	void generateImage(){
@@ -110,15 +110,10 @@ public class GameMap {
 		}
 	}
 
-	BufferedImage getBackgroundImage() {
-
-		return scaleImage(backgroundImage);
-	}
-
+	BufferedImage getBackgroundImage() {return scaleImage(backgroundImage);}
 	BufferedImage getScentImage() {
 		return scaleImage(scentImage);
 	}
-
 	BufferedImage getObjectsImage() {
 		return scaleImage(objectsImage);
 	}
@@ -180,7 +175,7 @@ public class GameMap {
 		}
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
-				if(Tab[x][y]==1)tiles[x][y].decreaseScentValue(-1*value, maxvalue);;
+				if(Tab[x][y]==1)tiles[x][y].decreaseScentValue(-1*value, maxvalue);
 			}
 		}
 	}

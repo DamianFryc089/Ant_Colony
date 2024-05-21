@@ -1,15 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Display extends JPanel {
 
-	ArrayList<Object> objects;
-	GameMap gameMap;
-	Display(String[] args, ArrayList<Object> objects, GameMap gameMap)
+	AntColony game;
+	Display(String[] args, AntColony game)
 	{
-		this.objects = objects;
-		this.gameMap = gameMap;
+		this.game = game;
 
 			// Tworzenie okna
 		JFrame frame = new JFrame("Ant Colony");
@@ -45,12 +42,15 @@ public class Display extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(gameMap.getBackgroundImage(), 0, 0, null);
-		g.drawImage(gameMap.getScentImage(),0,0, null);
-		g.drawImage(gameMap.getObjectsImage(),0,0,null);
-//		for (int i = 0; i < objects.size(); i++) {
-//			g.setColor(objects.get(i).getColor());
-//			g.fillRect(objects.get(i).getX(), objects.get(i).getY(), objects.get(i).getSize(), objects.get(i).getSize());
-//		}
+		g.drawImage(game.gameMap.getBackgroundImage(), 0, 0, null);
+		g.drawImage(game.gameMap.getScentImage(),0,0, null);
+		g.drawImage(game.gameMap.getObjectsImage(),0,0,null);
+
+			// Rysowanie liczby ticków
+		g.drawChars(("Tick: " + game.tick).toCharArray(), 0,("Tick: " + game.tick).length(),10,15);
+			// Rysowanie liczby mrówek
+		g.drawChars(("Ants: " + Ant.antCounter).toCharArray(), 0,("Ants: " + Ant.antCounter).length(),10,30);
+			// Rysowanie liczby pozostałego jedzenia na planszy
+		g.drawChars(("Food left: " + Food.foodCounter).toCharArray(), 0,("Food left: " + Food.foodCounter).length(),10,45);
 	}
 }

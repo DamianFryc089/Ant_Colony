@@ -4,6 +4,7 @@ import java.util.Random;
 public class Ant extends Object{
     static int antCounter = 0;
     boolean carryFood = false;
+    int lifeTime = 99999999; // póki co nieskończoność
     int k, b; //kierunek w krórym idzie mrówka i pamięć mrówki(NIE DOTYKAĆ!!!)
     int p=100;//cierpliwość mrówki(określa kiedy jej się znudzi łarzenie za zapachem innej mówki)
     int f=10;//jak dlugo mrówka będzie miała focha
@@ -15,8 +16,15 @@ public class Ant extends Object{
     }
 
     @Override
-    void move(){
+    void action(){
         gameMap.takeObject(this);
+        lifeTime--;
+        if (lifeTime <= 0) {
+            death();
+            return;
+        }
+//        gameMap.takeObject(this);     // zamiast tego samego powyżej, aby były widoczne zwłoki mrówek, dopóki inna mrówka po nich nie przejdzie
+
         int tab[] = {-1,-1,-1,-1};
         if(x+1<gameMap.getWidth()){tab[0]=gameMap.tiles[x+1][y].getScentValue();}
         if(x-1>0){tab[1]=gameMap.tiles[x-1][y].getScentValue();}
@@ -51,7 +59,7 @@ public class Ant extends Object{
                 if(z==2){x+=1;k=0;}
                 break;
         }
-        if(x+1>gameMap.getWidth()||x<1||gameMap.getHeight()<y+1||y<1){x=250;y=250;}
+        if(x+1>gameMap.getWidth()||x<1||gameMap.getHeight()<y+1||y<1){x= gameMap.getWidth()/2;y= gameMap.getHeight()/2;}
         gameMap.placeObject(this);
     }
     int logika(int s, int r, int l){ //s-prosto r-prawo l-lewo
@@ -100,7 +108,9 @@ public class Ant extends Object{
     @Override
     Color getColor() {return new Color(0,0,0);}
 
-        // Epilepsja
-//    @Override
-//    Color getColor() {return new Color(new Random().nextInt(0,255),new Random().nextInt(0,255),new Random().nextInt(0,255));}
+    @Override
+    void death() {
+        super.death();
+        antCounter--;
+    }
 }

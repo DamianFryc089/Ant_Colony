@@ -9,6 +9,13 @@ public class Food extends Object{
 		foodValue = 100;
 		foodCounter+=foodValue;
 	}
-	void decreaseFood() {foodValue--; foodCounter--;}
+	void decreaseFood() {
+		foodValue--;
+		foodCounter--;
+		if (foodValue <= 0) {
+			death();
+			gameMap.takeObject(this);
+		}
+	}
 	Color getColor(){ return new Color(250, 98, 98);}
 }

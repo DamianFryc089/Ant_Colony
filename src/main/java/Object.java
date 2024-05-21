@@ -1,8 +1,7 @@
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class Object {
+public abstract class Object {
     int x, y, size;
     Random random;
     GameMap gameMap;
@@ -16,9 +15,9 @@ public class Object {
         this.gameMap = gameMap;
         gameMap.placeObject(this);
     }
-    void move(){}
+    void death() {gameMap.objects.remove(this);}
+    void action(){}
     Color getColor(){ return new Color(255, 0, 0);}
-
     int getX(){ return x;}
     int getY(){ return y;}
     int getSize(){ return size;}
