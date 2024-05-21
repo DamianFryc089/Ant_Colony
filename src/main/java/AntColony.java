@@ -34,7 +34,7 @@ public class AntColony extends JPanel {
     private class MainLoop extends TimerTask {
         @Override
         public void run() {
-            gameMap.decreaseScentValues(1);
+            gameMap.decreaseScentValues(1, 50);
             objects.forEach(Object::move);
             display.repaint();
         }

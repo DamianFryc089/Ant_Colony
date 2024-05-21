@@ -156,10 +156,10 @@ public class GameMap {
 		}
 	}
 
-	void decreaseScentValues(int value) {
+	void decreaseScentValues(int value, int maxvalue) {
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
-				tiles[x][y].decreaseScentValue(value);
+				tiles[x][y].decreaseScentValue(value, maxvalue);
 			}
 		}
 	}
