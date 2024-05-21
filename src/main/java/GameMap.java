@@ -37,9 +37,10 @@ public class GameMap {
 					new Color(166, 31, 174, Math.min(scentValue,255)).getRGB()
 			);
 		}
-		void decreaseScentValue(int value) {
+		void decreaseScentValue(int value, int maxvalue) {
 			scentValue-=value;
 			if(scentValue<0) scentValue = 0;
+			if(scentValue>maxvalue) scentValue=maxvalue;
 			scentImage.setRGB(x, y,
 					new Color(166, 31, 174, Math.min(scentValue,255)).getRGB()
 			);

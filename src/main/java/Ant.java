@@ -4,7 +4,10 @@ import java.util.Random;
 public class Ant extends Object{
     static int antCounter = 0;
     boolean carryFood = false;
-    int k=0;
+    int k, b; //kierunek w krórym idzie mrówka i pamięć mrówki(NIE DOTYKAĆ!!!)
+    int p=100;//cierpliwość mrówki(określa kiedy jej się znudzi łarzenie za zapachem innej mówki)
+    int f=10;//jak dlugo mrówka będzie miała focha
+    int a=50; // 2/a szansa na to że mrówka losowo zmieni kierunek(tylko w tedy gdy mrówka nie wyczuwa zapachu)
     Ant(int x, int y, int size, Random random, GameMap gameMap) {
         super(x, y, size, random, gameMap);
         antCounter++;
@@ -19,7 +22,7 @@ public class Ant extends Object{
         if(x-1>0){tab[1]=gameMap.tiles[x-1][y].getScentValue();}
         if(y+1<gameMap.getHeight()){tab[2]=gameMap.tiles[x][y+1].getScentValue();}
         if(y-1>0){tab[3]=gameMap.tiles[x][y-1].getScentValue();}
-        gameMap.tiles[x][y].increaseScentValue(100);
+        gameMap.tiles[x][y].increaseScentValue(30);
         int z;
         switch (k)
         {
@@ -52,10 +55,19 @@ public class Ant extends Object{
         gameMap.placeObject(this);
     }
     int logika(int s, int r, int l){ //s-prosto r-prawo l-lewo
+        if(b>p)
+        {
+            s*=-1;
+            r*=-1;
+            l*=-1;
+            b++;
+            if(b>p+f){b=0;}
+        }
         if( s > r && s > l )
-        {return 0;}
+        {b++;return 0;}
         if( s < r || s < l)
         {
+            b++;
             if(r==l)
             {
                 int z= random.nextInt(0,2);
@@ -69,14 +81,14 @@ public class Ant extends Object{
         }
         if( s == l || s == r )
         {
-            int z = random.nextInt(0, 21);
-            if(z<19){return 0;}//90% szans że mrówka pujdzie prosto 10% że zmieni kierunek
+            int z = random.nextInt(0, a+1);
+            if(z<a-1){return 0;}//90% szans że mrówka pujdzie prosto 10% że zmieni kierunek
             else
             {
                 if( s == r && s == l)
                 {
-                    if(z==19){return 1;}
-                    if(z==20){return 2;}
+                    if(z==a-1){return 1;}
+                    if(z==a){return 2;}
                 }
                 if( s == r ){return 1;}
                 if( s == l){return 2;}

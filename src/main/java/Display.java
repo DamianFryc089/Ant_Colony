@@ -17,7 +17,7 @@ public class Display extends JPanel {
 		frame.setResizable(false);
 
 			// Znalezienie wartości wymiarów okna z argumentów
-		int[] size = {500, 500};
+		int[] size = {1000, 900};
 		if (args.length == 2 ) {
 			try{
 				size[0] = Integer.parseInt(args[0]);
