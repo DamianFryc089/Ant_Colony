@@ -1,40 +1,43 @@
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AntColony extends JPanel {
+public class AntColony{
     Random random;
+    long seed;
     ArrayList<Object> objects;
     Display display;
     GameMap gameMap;
-    final int targetFPS = 60;
+    float targetFPS = 60;
     final int scale = 2; // max 4? Może wywalić error jak będzie więcej
     long tick = 0;
+    boolean isPaused = false;
+    Timer timer;
 
     public AntColony(String[] args) {
-        random = new Random(3);
+        random = new Random();
+//        seed = random.nextInt();
+        seed = 5;
+        random.setSeed(seed);
+
         objects = new ArrayList<>();
         gameMap = new GameMap(random, objects, scale);
         display = new Display(args, this);
 
         gameMap.generateMap(display.getWidth(), display.getHeight());
 
-//        for (int i = 0; i < 100 ; i++) {
-//            int wid = random.nextInt(10, gameMap.getWidth() - 10);
-//            int hei = random.nextInt(10, gameMap.getHeight() - 10);
-//            objects.add(new Ant(wid, hei, 1, random, gameMap));
-//        }
-
-//         Timer z pętlą symulacji na innym wątku
-        Timer timer = new Timer();
-        timer.schedule(new MainLoop(), 0, (long) 1000/targetFPS);
+            // Timer z pętlą symulacji na innym wątku
+        timer = new Timer();
+        timer.schedule(new MainLoop(), 0, (long) 1000/(int)targetFPS);
     }
 
-    private class MainLoop extends TimerTask {
+
+    public class MainLoop extends TimerTask {
         @Override
         public void run() {
+            if (isPaused)
+                return;
             if (tick % 100000 == 0)
                 gameMap.generateFoodField(25);
 
@@ -43,9 +46,16 @@ public class AntColony extends JPanel {
             for (int i = 0; i < objects.size(); i++) objects.get(i).action();
             display.repaint();
             tick++;
+//            System.out.println(random.nextInt(100));
         }
     }
 
+    void updateFPS()
+    {
+        if (timer != null) timer.cancel();
+        timer = new Timer();
+        timer.schedule(new MainLoop(), 0, (long) 1000/(int)targetFPS);
+    }
     public static void main(String[] args) {
         AntColony simulation = new AntColony(args);
     }

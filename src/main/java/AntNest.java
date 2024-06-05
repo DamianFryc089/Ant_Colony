@@ -3,13 +3,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 class AntNest extends Object {
-	ArrayList<Object> objects;
 	int foodInNest = 0;
 
-	AntNest(int x, int y, int size, Random random, GameMap gameMap, ArrayList<Object> objects)
+	AntNest(int x, int y, int size, Random random, GameMap gameMap)
 	{
 		super(x, y, size, random, gameMap);
-		this.objects = objects;
 	}
 
 	@Override
@@ -56,7 +54,6 @@ class AntNest extends Object {
 		do {
 			if(gameMap.tiles[newX][newY].cellOccupant == null){
 				gameMap.tiles[newX][newY].cellOccupant = new Ant(newX,newY,1, random,gameMap);
-				objects.add(gameMap.tiles[newX][newY].cellOccupant);
 				return true;
 			}
 			if (newY == y-1){
@@ -81,4 +78,10 @@ class AntNest extends Object {
 
 	@Override
 	Color getColor() {return new Color(119, 52, 29);}
+
+	@Override
+	public String toString() {
+		return super.toString() +
+				"|" + foodInNest;
+	}
 }

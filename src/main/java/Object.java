@@ -14,6 +14,7 @@ public abstract class Object {
         this.random = random;
         this.gameMap = gameMap;
         gameMap.placeObject(this);
+        gameMap.objects.add(this);
     }
     void death() {gameMap.objects.remove(this);}
     void action(){}
@@ -21,4 +22,9 @@ public abstract class Object {
     int getX(){ return x;}
     int getY(){ return y;}
     int getSize(){ return size;}
+
+    @Override
+    public String toString() {
+        return this.getClass() + "|" + x + "|" + y + "|" + size;
+    }
 }

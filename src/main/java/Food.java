@@ -9,6 +9,11 @@ public class Food extends Object{
 		foodValue = 100;
 		foodCounter+=foodValue;
 	}
+	Food(int x, int y, int size, Random random, GameMap gameMap, int foodValue) {
+		super(x, y, size, random, gameMap);
+		this.foodValue = foodValue;
+		foodCounter+=foodValue;
+	}
 	void decreaseFood() {
 		foodValue--;
 		foodCounter--;
@@ -18,4 +23,10 @@ public class Food extends Object{
 		}
 	}
 	Color getColor(){ return new Color(250, 98, 98);}
+
+	@Override
+	public String toString() {
+		return super.toString() +
+			"|" + foodValue;
+	}
 }

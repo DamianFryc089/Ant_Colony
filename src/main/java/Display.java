@@ -1,12 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Timer;
 
-public class Display extends JPanel {
+public class Display extends JPanel implements KeyListener {
 
-	AntColony game;
-	Display(String[] args, AntColony game)
+	AntColony simulation;
+	Display(String[] args, AntColony simulation)
 	{
-		this.game = game;
+		this.simulation = simulation;
+
 
 			// Tworzenie okna
 		JFrame frame = new JFrame("Ant Colony");
@@ -27,6 +31,7 @@ public class Display extends JPanel {
 			frame.setSize(new Dimension(size[0] + 16, size[1] + 39));
 			frame.setVisible(true);
 			frame.getContentPane().add(this);
+//			frame.add(this);
 			frame.setVisible(true);
 		}
 		else {
@@ -35,22 +40,64 @@ public class Display extends JPanel {
 			frame.setUndecorated(true);
 			frame.setVisible(true);
 			frame.getContentPane().add(this);
+//			frame.add(this);
 			frame.setVisible(true);
 		}
+
+		this.addKeyListener(this);
+		this.setFocusable(true);
+		this.requestFocusInWindow();
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(game.gameMap.getBackgroundImage(), 0, 0, null);
-		g.drawImage(game.gameMap.getScentImage(),0,0, null);
-		g.drawImage(game.gameMap.getObjectsImage(),0,0,null);
+		g.drawImage(simulation.gameMap.getBackgroundImage(), 0, 0, null);
+		g.drawImage(simulation.gameMap.getScentImage(),0,0, null);
+		g.drawImage(simulation.gameMap.getObjectsImage(),0,0,null);
 
 			// Rysowanie liczby ticków
-		g.drawChars(("Tick: " + game.tick).toCharArray(), 0,("Tick: " + game.tick).length(),10,15);
+		g.drawChars(("Tick: " + simulation.tick).toCharArray(), 0,("Tick: " + simulation.tick).length(),10,15);
 			// Rysowanie liczby mrówek
 		g.drawChars(("Ants: " + Ant.antCounter).toCharArray(), 0,("Ants: " + Ant.antCounter).length(),10,30);
 			// Rysowanie liczby pozostałego jedzenia na planszy
 		g.drawChars(("Food left: " + Food.foodCounter).toCharArray(), 0,("Food left: " + Food.foodCounter).length(),10,45);
+			// Rysowanie liczby fps
+		g.drawChars(("FPS: "+(int)simulation.targetFPS).toCharArray(), 0,("FPS: "+(int)simulation.targetFPS).length(),getWidth()-32- 7*(""+(int)simulation.targetFPS).length(),10);
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyChar() == KeyEvent.VK_SPACE)
+			simulation.isPaused = !simulation.isPaused;
+
+		if (e.getKeyChar() == 'x' || e.getKeyChar() == KeyEvent.VK_ESCAPE)
+			System.exit(0);
+
+		if (e.getKeyChar() == 's')
+			SaveHandler.save(simulation);
+		if (e.getKeyChar() == 'l') {
+			simulation.isPaused = true;
+			SaveHandler.load(simulation);
+			repaint();
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			simulation.targetFPS = Math.min(1000, simulation.targetFPS*11/10);
+			simulation.updateFPS();
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			simulation.targetFPS = Math.max(1, simulation.targetFPS*9/10);
+			simulation.updateFPS();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+
 	}
 }

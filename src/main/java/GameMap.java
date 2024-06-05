@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,6 +18,8 @@ public class GameMap {
 		this.objects = objects;
 		this.scale = scale;
 	}
+
+
 
 	public class Tile{
 		int x, y;
@@ -41,6 +45,13 @@ public class GameMap {
 			scentValue-=value;
 			if(scentValue<0) scentValue = 0;
 			if(scentValue>maxvalue) scentValue=maxvalue;
+			scentImage.setRGB(x, y,
+					new Color(166, 31, 174, Math.min(scentValue,255)).getRGB()
+			);
+		}
+		void setScentValue(int value)
+		{
+			scentValue = value;
 			scentImage.setRGB(x, y,
 					new Color(166, 31, 174, Math.min(scentValue,255)).getRGB()
 			);
@@ -94,10 +105,10 @@ public class GameMap {
 			}
 		}
 		generateImage();
-		objects.add(new AntNest(
+		new AntNest(
 				random.nextInt(width/10,width - width/5 - 25),
 				random.nextInt(height/10,height - height/5 - 25),
-				25, random, this, objects));
+				25, random, this);
 //		generateWalls(100);
 //		generateFoodField(25);
 	}
@@ -192,7 +203,7 @@ public class GameMap {
 			while (true) {
 				if (randX < width && randY >= 0 && randY < height && tiles[randX][randY].cellOccupant == null) {
 					tiles[randX][randY].cellOccupant = new Wall(randX, randY, 1, random, this);
-					objects.add(tiles[randX][randY].cellOccupant);
+//					objects.add(tiles[randX][randY].cellOccupant);
 					count--;
 				}
 				else break;
@@ -224,7 +235,7 @@ public class GameMap {
 	{
 		if (x >= 0 && x < width && y >= 0 && y < height && tiles[x][y].cellOccupant == null) {
 			tiles[x][y].cellOccupant = new Food(x, y, 1, random, this);
-			objects.add(tiles[x][y].cellOccupant);
+//			objects.add(tiles[x][y].cellOccupant);
 			return true;
 		}
 		return false;

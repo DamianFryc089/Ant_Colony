@@ -14,6 +14,18 @@ public class Ant extends Object{
         antCounter++;
         k = random.nextInt(0,4);
     }
+    Ant(int x, int y, int size, Random random, GameMap gameMap, boolean carryFood, int lifeTime, int k, int b, int p, int f, int a)
+    {
+        super(x, y, size, random, gameMap);
+        this.carryFood = carryFood;
+        this.lifeTime = lifeTime;
+        this.k = k;
+        this.b = b;
+        this.p = p;
+        this.f = f;
+        this.a = a;
+        antCounter++;
+    }
 
     @Override
     void action(){
@@ -112,5 +124,17 @@ public class Ant extends Object{
     void death() {
         super.death();
         antCounter--;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "|" + carryFood +
+                "|" + lifeTime +
+                "|" + k +
+                "|" + b +
+                "|" + p +
+                "|" + f +
+                "|" + a;
     }
 }
