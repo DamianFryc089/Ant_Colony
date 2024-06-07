@@ -30,41 +30,58 @@ public class Ant extends Object{
     @Override
     void action(){
         gameMap.takeObject(this);
-        lifeTime--;
-        if (lifeTime <= 0) {
-            death();
-            return;
-        }
 //        gameMap.takeObject(this);     // zamiast tego samego powyżej, aby były widoczne zwłoki mrówek, dopóki inna mrówka po nich nie przejdzie
-
-        int tab[] = {-1,-1,-1,-1};
-        if(x+1<gameMap.getWidth()){tab[0]=gameMap.tiles[x+1][y].getScentValue();}
-        if(x-1>0){tab[1]=gameMap.tiles[x-1][y].getScentValue();}
-        if(y+1<gameMap.getHeight()){tab[2]=gameMap.tiles[x][y+1].getScentValue();}
-        if(y-1>0){tab[3]=gameMap.tiles[x][y-1].getScentValue();}
-        gameMap.tiles[x][y].increaseScentValue(30);
+        int tab[] = {-256,-256,-256,-256};
+        if(x+1<gameMap.getWidth() && gameMap.tiles[x+1][y].cellOccupant == null){tab[0]=gameMap.tiles[x+1][y].getScentValue();}
+        if(x-1>0 && gameMap.tiles[x-1][y].cellOccupant == null){tab[1]=gameMap.tiles[x-1][y].getScentValue();}
+        if(y+1<gameMap.getHeight() && gameMap.tiles[x][y+1].cellOccupant == null){tab[2]=gameMap.tiles[x][y+1].getScentValue();}
+        if(y-1>0 && gameMap.tiles[x][y-1].cellOccupant == null){tab[3]=gameMap.tiles[x][y-1].getScentValue();}
+        if(carryFood){
+            gameMap.tiles[x][y].setScentValue(30);
+            for(int i=0; i<4; i++)
+            {if(tab[i]!=-256)tab[i]*=-1;}
+        }
+        else {
+            gameMap.tiles[x][y].setScentValue(-30);
+        }
         int z;
         switch (k)
         {
             case 0:
+                if(nose()){k=1;
+                    if(carryFood){AntNest.increaceFood();carryFood = false;}
+                    else carryFood=true;
+                    return;}
                 z=logika(tab[0], tab[3], tab[2]);
                 if(z==0){x+=1;}
                 if(z==1){y-=1;k=3;}
                 if(z==2){y+=1;k=2;}
                 break;
             case 1:
+                if(nose()){k=0;
+                    if(carryFood){AntNest.increaceFood();carryFood = false;}
+                    else carryFood=true;
+                    return;}
                 z=logika(tab[1], tab[2], tab[3]);
                 if(z==0){x-=1;}
                 if(z==1){y+=1;k=2;}
                 if(z==2){y-=1;k=3;}
                 break;
             case 2:
+                if(nose()){k=3;
+                    if(carryFood){AntNest.increaceFood();carryFood = false;}
+                    else carryFood=true;
+                    return;}
                 z=logika(tab[2], tab[0], tab[1]);
                 if(z==0){y+=1;}
                 if(z==1){x+=1;k=0;}
                 if(z==2){x-=1;k=1;}
                 break;
             case 3:
+                if(nose()){k=2;
+                    if(carryFood){AntNest.increaceFood();carryFood = false;}
+                    else carryFood=true;
+                    return;}
                 z=logika(tab[3], tab[1], tab[0]);
                 if(z==0){y-=1;}
                 if(z==1){x-=1;k=1;}
@@ -74,15 +91,31 @@ public class Ant extends Object{
         if(x+1>gameMap.getWidth()||x<1||gameMap.getHeight()<y+1||y<1){x= gameMap.getWidth()/2;y= gameMap.getHeight()/2;}
         gameMap.placeObject(this);
     }
-    int logika(int s, int r, int l){ //s-prosto r-prawo l-lewo
-        if(b>p)
-        {
-            s*=-1;
-            r*=-1;
-            l*=-1;
-            b++;
-            if(b>p+f){b=0;}
+    boolean nose()
+    {
+        if(!carryFood) {
+            if (x + 1 < gameMap.getWidth() && gameMap.tiles[x + 1][y].cellOccupant != null && gameMap.tiles[x + 1][y].cellOccupant.getClass() == Food.class)
+                return true;
+            if (y + 1 < gameMap.getHeight() && gameMap.tiles[x][y + 1].cellOccupant != null && gameMap.tiles[x][y + 1].cellOccupant.getClass() == Food.class)
+                return true;
+            if (x - 1 > 0 && gameMap.tiles[x - 1][y].cellOccupant != null && gameMap.tiles[x - 1][y].cellOccupant.getClass() == Food.class)
+                return true;
+            if (y - 1 > 0 && gameMap.tiles[x][y - 1].cellOccupant != null && gameMap.tiles[x][y - 1].cellOccupant.getClass() == Food.class)
+                return true;
         }
+        else {
+            if (x + 1 < gameMap.getWidth() && gameMap.tiles[x + 1][y].cellOccupant != null && gameMap.tiles[x + 1][y].cellOccupant.getClass() == AntNest.class)
+                return true;
+            if (y + 1 < gameMap.getHeight() && gameMap.tiles[x][y + 1].cellOccupant != null && gameMap.tiles[x][y + 1].cellOccupant.getClass() == AntNest.class)
+                return true;
+            if (x - 1 > 0 && gameMap.tiles[x - 1][y].cellOccupant != null && gameMap.tiles[x - 1][y].cellOccupant.getClass() == AntNest.class)
+                return true;
+            if (y - 1 > 0 && gameMap.tiles[x][y - 1].cellOccupant != null && gameMap.tiles[x][y - 1].cellOccupant.getClass() == AntNest.class)
+                return true;
+        }
+        return false;
+    }
+    int logika(int s, int r, int l){ //s-prosto r-prawo l-lewo
         if( s > r && s > l )
         {b++;return 0;}
         if( s < r || s < l)

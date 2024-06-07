@@ -40,9 +40,8 @@ public class AntColony{
                 return;
             if (tick % 100000 == 0)
                 gameMap.generateFoodField(25);
-
-//            gameMap.spreadScentValues(1,255);//rozprzestrzenianie się zapachu na sąsiednie pola
-            gameMap.decreaseScentValues(1, 255);
+            if(tick % 3 == 0)   gameMap.spreadScentValues(1,255);//rozprzestrzenianie się zapachu na sąsiednie pola
+            //gameMap.decreaseScentValues(1, 255);
             for (int i = 0; i < objects.size(); i++) objects.get(i).action();
             display.repaint();
             tick++;

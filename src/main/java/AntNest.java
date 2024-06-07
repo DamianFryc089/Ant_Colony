@@ -3,8 +3,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 class AntNest extends Object {
-	int foodInNest = 0;
-
+	static int foodInNest = 100;
+	static void increaceFood()
+	{
+		foodInNest++;
+	}
 	AntNest(int x, int y, int size, Random random, GameMap gameMap)
 	{
 		super(x, y, size, random, gameMap);
@@ -12,10 +15,11 @@ class AntNest extends Object {
 
 	@Override
 	void action() {
-		foodInNest++; // Automatyczne generowanie mrówek
+		//foodInNest++; // Automatyczne generowanie mrówek
 		if (foodInNest >= 10)
 			if(spawnAnt())
 				foodInNest-=10;
+		gameMap.tiles[x][y].setScentValue(-100);
 	}
 
 	boolean spawnAnt()
