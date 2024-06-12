@@ -11,8 +11,7 @@ public class GameMap {
 	private BufferedImage backgroundImage, scentImage, objectsImage;
 	Random random;
 	ArrayList<Object> objects;
-	int scale;
-
+	int scale, xn, yn;
 	GameMap(Random random, ArrayList<Object> objects, int scale) {
 		this.random = random;
 		this.objects = objects;
@@ -37,17 +36,21 @@ public class GameMap {
 		int getScentValue() {return scentValue;}
 		void increaseScentValue(int value) {
 			scentValue+=value;
-			scentImage.setRGB(x, y,
-					new Color(166, 31, 174, Math.min(scentValue,255)).getRGB()
-			);
+			if(scentValue>255) scentValue=255;
+			if(scentValue<-255) scentValue=-255;
+			if(scentValue<0) scentImage.setRGB(x, y,	new Color(255, 0, 0, Math.min(-scentValue,255)).getRGB());
+			else  scentImage.setRGB(x, y,	new Color(0, 255, 0, Math.min(scentValue,255)).getRGB());
+			//scentImage.setRGB(x, y, new Color(0, 0, 0, Math.min(scentValue,255)).getRGB());
 		}
 		void decreaseScentValue(int value, int maxvalue) {
-			scentValue-=value;
-			if(scentValue<0) scentValue = 0;
+			if(scentValue>0)scentValue-=value;
+			if(scentValue<0)scentValue+=value;
 			if(scentValue>maxvalue) scentValue=maxvalue;
-			scentImage.setRGB(x, y,
-					new Color(0, 0, 0, Math.min(scentValue,255)).getRGB()
-			);
+			if(scentValue<-maxvalue) scentValue=-maxvalue;
+			if(scentValue<0) scentImage.setRGB(x, y,	new Color(255, 0, 0, Math.min(-scentValue,255)).getRGB());
+			else  scentImage.setRGB(x, y,	new Color(0, 255, 0, Math.min(scentValue,255)).getRGB());
+
+
 		}
 		void setScentValue(int value)
 		{
@@ -106,12 +109,11 @@ public class GameMap {
 				}*/
 			}
 		}
+		xn = random.nextInt(width/10,width - width/5 - 25);
+		yn = random.nextInt(height/10,height - height/5 - 25);
 		generateImage();
-		new AntNest(
-				random.nextInt(width/10,width - width/5 - 25),
-				random.nextInt(height/10,height - height/5 - 25),
-				25, random, this);
-		generateWalls(100);
+		new AntNest(xn, yn,25, random, this);
+		generateWalls(1000);
 //		generateFoodField(25);
 	}
 
@@ -178,17 +180,17 @@ public class GameMap {
 			for(int y = 0; y < height; y++){
 				if(tiles[x][y].scentValue>0) {
 					if(Tab[x][y]<tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue-1;
-					if(x-1>0 && tiles[x-1][y].scentValue<tiles[x][y].scentValue-1 && Tab[x-1][y]<tiles[x][y].scentValue-1 && tiles[x-1][y].cellOccupant==null) Tab[x-1][y]=tiles[x][y].scentValue-1;
-					if(y-1>0 && tiles[x][y-1].scentValue<tiles[x][y].scentValue-1 && Tab[x][y-1]<tiles[x][y].scentValue-1 && tiles[x][y-1].cellOccupant==null) Tab[x][y-1]=tiles[x][y].scentValue-1;
-					if(x+1<width && tiles[x+1][y].scentValue<tiles[x][y].scentValue-1 && Tab[x+1][y]<tiles[x][y].scentValue-1 && tiles[x+1][y].cellOccupant==null) Tab[x+1][y]=tiles[x][y].scentValue-1;
-					if(y+1<height && tiles[x][y+1].scentValue<tiles[x][y].scentValue-1 && Tab[x][y+1]<tiles[x][y].scentValue-1 && tiles[x][y+1].cellOccupant==null) Tab[x][y+1]=tiles[x][y].scentValue-1;
+					if(x-1>0 && tiles[x-1][y].scentValue>=0 && tiles[x-1][y].scentValue<tiles[x][y].scentValue-1 && Tab[x-1][y]<tiles[x][y].scentValue-1 && tiles[x-1][y].cellOccupant==null) Tab[x-1][y]=tiles[x][y].scentValue-1;
+					if(y-1>0 && tiles[x][y-1].scentValue>=0 && tiles[x][y-1].scentValue<tiles[x][y].scentValue-1 && Tab[x][y-1]<tiles[x][y].scentValue-1 && tiles[x][y-1].cellOccupant==null) Tab[x][y-1]=tiles[x][y].scentValue-1;
+					if(x+1<width && tiles[x+1][y].scentValue>=0 && tiles[x+1][y].scentValue<tiles[x][y].scentValue-1 && Tab[x+1][y]<tiles[x][y].scentValue-1 && tiles[x+1][y].cellOccupant==null) Tab[x+1][y]=tiles[x][y].scentValue-1;
+					if(y+1<height && tiles[x][y+1].scentValue>=0 && tiles[x][y+1].scentValue<tiles[x][y].scentValue-1 && Tab[x][y+1]<tiles[x][y].scentValue-1 && tiles[x][y+1].cellOccupant==null) Tab[x][y+1]=tiles[x][y].scentValue-1;
 				}
 				if(tiles[x][y].scentValue<0) {
 					if(Tab[x][y]>tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue+1;
-					if(x-1>0 && tiles[x-1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x-1][y]>tiles[x][y].scentValue+1 && tiles[x-1][y].cellOccupant==null) Tab[x-1][y]=tiles[x][y].scentValue+1;
-					if(y-1>0 && tiles[x][y-1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y-1]>tiles[x][y].scentValue+1 && tiles[x][y-1].cellOccupant==null) Tab[x][y-1]=tiles[x][y].scentValue+1;
-					if(x+1<width && tiles[x+1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x+1][y]>tiles[x][y].scentValue+1 && tiles[x+1][y].cellOccupant==null) Tab[x+1][y]=tiles[x][y].scentValue+1;
-					if(y+1<height && tiles[x][y+1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y+1]>tiles[x][y].scentValue+1 && tiles[x][y+1].cellOccupant==null) Tab[x][y+1]=tiles[x][y].scentValue+1;
+					if(x-1>0 && tiles[x-1][y].scentValue<=0 && tiles[x-1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x-1][y]>tiles[x][y].scentValue+1 && tiles[x-1][y].cellOccupant==null) Tab[x-1][y]=tiles[x][y].scentValue+1;
+					if(y-1>0 && tiles[x][y-1].scentValue<=0 && tiles[x][y-1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y-1]>tiles[x][y].scentValue+1 && tiles[x][y-1].cellOccupant==null) Tab[x][y-1]=tiles[x][y].scentValue+1;
+					if(x+1<width && tiles[x+1][y].scentValue<=0 && tiles[x+1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x+1][y]>tiles[x][y].scentValue+1 && tiles[x+1][y].cellOccupant==null) Tab[x+1][y]=tiles[x][y].scentValue+1;
+					if(y+1<height && tiles[x][y+1].scentValue<=0 && tiles[x][y+1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y+1]>tiles[x][y].scentValue+1 && tiles[x][y+1].cellOccupant==null) Tab[x][y+1]=tiles[x][y].scentValue+1;
 				}
 			}
 		}
@@ -251,4 +253,6 @@ public class GameMap {
 
 	int getWidth(){return width;}
 	int getHeight(){return height;}
+	int getNestx(){return xn;}
+	int getNesty(){return yn;}
 }

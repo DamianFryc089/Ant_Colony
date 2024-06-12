@@ -4,10 +4,7 @@ import java.util.Random;
 public class Ant extends Object{
     static int antCounter = 0;
     boolean carryFood = false;
-    int lifeTime = 99999999; // póki co nieskończoność
-    int k, b; //kierunek w krórym idzie mrówka i pamięć mrówki(NIE DOTYKAĆ!!!)
-    int p=100;//cierpliwość mrówki(określa kiedy jej się znudzi łarzenie za zapachem innej mówki)
-    int f=10;//jak dlugo mrówka będzie miała focha
+    int k; //kierunek w krórym idzie mrówka(NIE DOTYKAĆ!!!)
     int a=50; // 2/a szansa na to że mrówka losowo zmieni kierunek(tylko w tedy gdy mrówka nie wyczuwa zapachu)
     Ant(int x, int y, int size, Random random, GameMap gameMap) {
         super(x, y, size, random, gameMap);
@@ -18,11 +15,7 @@ public class Ant extends Object{
     {
         super(x, y, size, random, gameMap);
         this.carryFood = carryFood;
-        this.lifeTime = lifeTime;
         this.k = k;
-        this.b = b;
-        this.p = p;
-        this.f = f;
         this.a = a;
         antCounter++;
     }
@@ -30,59 +23,46 @@ public class Ant extends Object{
     @Override
     void action(){
         gameMap.takeObject(this);
-//        gameMap.takeObject(this);     // zamiast tego samego powyżej, aby były widoczne zwłoki mrówek, dopóki inna mrówka po nich nie przejdzie
         int tab[] = {-256,-256,-256,-256};
         if(x+1<gameMap.getWidth() && gameMap.tiles[x+1][y].cellOccupant == null){tab[0]=gameMap.tiles[x+1][y].getScentValue();}
         if(x-1>0 && gameMap.tiles[x-1][y].cellOccupant == null){tab[1]=gameMap.tiles[x-1][y].getScentValue();}
         if(y+1<gameMap.getHeight() && gameMap.tiles[x][y+1].cellOccupant == null){tab[2]=gameMap.tiles[x][y+1].getScentValue();}
         if(y-1>0 && gameMap.tiles[x][y-1].cellOccupant == null){tab[3]=gameMap.tiles[x][y-1].getScentValue();}
         if(carryFood){
-            gameMap.tiles[x][y].setScentValue(30);
+            gameMap.tiles[x][y].increaseScentValue(30);
             for(int i=0; i<4; i++)
             {if(tab[i]!=-256)tab[i]*=-1;}
         }
         else {
-            gameMap.tiles[x][y].setScentValue(-30);
+            gameMap.tiles[x][y].increaseScentValue(-30);
         }
         int z;
         switch (k)
         {
             case 0:
-                if(nose()){k=1;
-                    if(carryFood){AntNest.increaceFood();carryFood = false;}
-                    else carryFood=true;
-                    return;}
                 z=logika(tab[0], tab[3], tab[2]);
+                if(z==3){k=1;return;}
                 if(z==0){x+=1;}
                 if(z==1){y-=1;k=3;}
                 if(z==2){y+=1;k=2;}
                 break;
             case 1:
-                if(nose()){k=0;
-                    if(carryFood){AntNest.increaceFood();carryFood = false;}
-                    else carryFood=true;
-                    return;}
                 z=logika(tab[1], tab[2], tab[3]);
+                if(z==3){k=0;return;}
                 if(z==0){x-=1;}
                 if(z==1){y+=1;k=2;}
                 if(z==2){y-=1;k=3;}
                 break;
             case 2:
-                if(nose()){k=3;
-                    if(carryFood){AntNest.increaceFood();carryFood = false;}
-                    else carryFood=true;
-                    return;}
                 z=logika(tab[2], tab[0], tab[1]);
+                if(z==3){k=3;return;}
                 if(z==0){y+=1;}
                 if(z==1){x+=1;k=0;}
                 if(z==2){x-=1;k=1;}
                 break;
             case 3:
-                if(nose()){k=2;
-                    if(carryFood){AntNest.increaceFood();carryFood = false;}
-                    else carryFood=true;
-                    return;}
                 z=logika(tab[3], tab[1], tab[0]);
+                if(z==3){k=2;return;}
                 if(z==0){y-=1;}
                 if(z==1){x-=1;k=1;}
                 if(z==2){x+=1;k=0;}
@@ -91,17 +71,139 @@ public class Ant extends Object{
         if(x+1>gameMap.getWidth()||x<1||gameMap.getHeight()<y+1||y<1){x= gameMap.getWidth()/2;y= gameMap.getHeight()/2;}
         gameMap.placeObject(this);
     }
+    int logika(int s, int r, int l){
+        if(nose()){
+            if(carryFood==true)carryFood=false;
+            else carryFood=true;
+            return 3;}
+        if( s==-256 && r==-256 && l==-256)return 3;//s-prosto r-prawo l-lewo
+        if( s > r && s > l ) return 0;
+        if( s < r || s < l)
+        {
+            if(r==l)
+            {
+                if(carryFood){
+                    switch(k){
+                        case 0:
+                            if(y > gameMap.getNesty())return 1;
+                            else return 2;
+                        case 1:
+                            if(y > gameMap.getNesty())return 2;
+                            else return 1;
+                        case 2:
+                            if(x > gameMap.getNestx())return 2;
+                            else return 1;
+                        case 3:
+                            if(x > gameMap.getNestx())return 1;
+                            else return 2;
+                    }
+                }
+                int z= random.nextInt(0,2);
+                if(z==0){return 1;}
+                else{return 2;}
+            }
+            if(r>l)
+            {return 1;}
+            else
+            {return 2;}
+        }
+        if( s == l && s == r ) {
+            if (carryFood) {
+                switch (k) {
+                    case 0:
+                        if (y > gameMap.getNesty()) return 1;
+                        if (y == gameMap.getNesty()) return 0;
+                        return 2;
+                    case 1:
+                        if (y > gameMap.getNesty()) return 2;
+                        if (y == gameMap.getNesty()) return 0;
+                        return 1;
+                    case 2:
+                        if (x > gameMap.getNestx()) return 2;
+                        if (x == gameMap.getNestx()) return 0;
+                        return 1;
+                    case 3:
+                        if (x > gameMap.getNestx()) return 1;
+                        if (x == gameMap.getNestx()) return 0;
+                        return 2;
+                }
+            }
+            int z = random.nextInt(0, a + 1);
+            if (z < a - 1) {
+                return 0;
+            }
+            if (z == a - 1) {
+                return 1;
+            }
+            if (z == a) {
+                return 2;
+            }
+        }
+        if( s == r ){
+            if(carryFood){
+                switch(k){
+                    case 0:
+                        if(y > gameMap.getNesty())return 1;
+                        if(y == gameMap.getNesty())return 0;
+                        return 0;
+                    case 1:
+                        if(y > gameMap.getNesty())return 0;
+                        if(y == gameMap.getNesty())return 0;
+                        return 1;
+                    case 2:
+                        if(x > gameMap.getNestx())return 0;
+                        if(x == gameMap.getNestx())return 0;
+                        return 1;
+                    case 3:
+                        if(x > gameMap.getNestx())return 1;
+                        if(x == gameMap.getNestx())return 0;
+                        return 0;
+                }
+            }
+            return 1;}
+        if( s == l){
+            if(carryFood){
+                switch(k){
+                    case 0:
+                        if(y > gameMap.getNesty())return 0;
+                        if(y == gameMap.getNesty())return 0;
+                        return 2;
+                    case 1:
+                        if(y > gameMap.getNesty())return 2;
+                        if(y == gameMap.getNesty())return 0;
+                        return 0;
+                    case 2:
+                        if(x > gameMap.getNestx())return 2;
+                        if(x == gameMap.getNestx())return 0;
+                        return 0;
+                    case 3:
+                        if(x > gameMap.getNestx())return 0;
+                        if(x == gameMap.getNestx())return 0;
+                        return 2;
+                }
+            }
+            return 2;}
+        return 3;
+    }
     boolean nose()
     {
         if(!carryFood) {
-            if (x + 1 < gameMap.getWidth() && gameMap.tiles[x + 1][y].cellOccupant != null && gameMap.tiles[x + 1][y].cellOccupant.getClass() == Food.class)
-                return true;
-            if (y + 1 < gameMap.getHeight() && gameMap.tiles[x][y + 1].cellOccupant != null && gameMap.tiles[x][y + 1].cellOccupant.getClass() == Food.class)
-                return true;
-            if (x - 1 > 0 && gameMap.tiles[x - 1][y].cellOccupant != null && gameMap.tiles[x - 1][y].cellOccupant.getClass() == Food.class)
-                return true;
-            if (y - 1 > 0 && gameMap.tiles[x][y - 1].cellOccupant != null && gameMap.tiles[x][y - 1].cellOccupant.getClass() == Food.class)
-                return true;
+            if (x + 1 < gameMap.getWidth() && gameMap.tiles[x + 1][y].cellOccupant != null && gameMap.tiles[x + 1][y].cellOccupant.getClass() == Food.class){
+                gameMap.tiles[x + 1][y].cellOccupant = null;
+                gameMap.tiles[x+1][y].setTileColor(new Color(0,0,0));
+                return true;}
+            if (y + 1 < gameMap.getHeight() && gameMap.tiles[x][y + 1].cellOccupant != null && gameMap.tiles[x][y + 1].cellOccupant.getClass() == Food.class){
+                gameMap.tiles[x][y + 1].cellOccupant = null;
+                gameMap.tiles[x][y + 1].setTileColor(new Color(0,0,0));
+                return true;}
+            if (x - 1 > 0 && gameMap.tiles[x - 1][y].cellOccupant != null && gameMap.tiles[x - 1][y].cellOccupant.getClass() == Food.class){
+                gameMap.tiles[x - 1][y].cellOccupant = null;
+                gameMap.tiles[x - 1][y].setTileColor(new Color(0,0,0));
+                return true;}
+            if (y - 1 > 0 && gameMap.tiles[x][y - 1].cellOccupant != null && gameMap.tiles[x][y - 1].cellOccupant.getClass() == Food.class){
+                gameMap.tiles[x][y - 1].cellOccupant = null;
+                gameMap.tiles[x][y - 1].setTileColor(new Color(0,0,0));
+                return true;}
         }
         else {
             if (x + 1 < gameMap.getWidth() && gameMap.tiles[x + 1][y].cellOccupant != null && gameMap.tiles[x + 1][y].cellOccupant.getClass() == AntNest.class)
@@ -115,41 +217,21 @@ public class Ant extends Object{
         }
         return false;
     }
-    int logika(int s, int r, int l){ //s-prosto r-prawo l-lewo
-        if( s > r && s > l )
-        {b++;return 0;}
-        if( s < r || s < l)
-        {
-            b++;
-            if(r==l)
-            {
-                int z= random.nextInt(0,2);
-                if(z==0){return 1;}
-                else{return 2;}
-            }
-            if(r>l)
-            {return 1;}
-            else
-            {return 2;}
-        }
-        if( s == l || s == r )
-        {
-            int z = random.nextInt(0, a+1);
-            if(z<a-1){return 0;}//90% szans że mrówka pujdzie prosto 10% że zmieni kierunek
-            else
-            {
-                if( s == r && s == l)
-                {
-                    if(z==a-1){return 1;}
-                    if(z==a){return 2;}
-                }
-                if( s == r ){return 1;}
-                if( s == l){return 2;}
-            }
+    void PathFinder(){
 
-        }
-        return 3;
+
+
+
+
+
+
+
+
+
+
+
     }
+
     @Override
     Color getColor() {return new Color(0,0,0);}
 
@@ -163,11 +245,7 @@ public class Ant extends Object{
     public String toString() {
         return super.toString() +
                 "|" + carryFood +
-                "|" + lifeTime +
                 "|" + k +
-                "|" + b +
-                "|" + p +
-                "|" + f +
                 "|" + a;
     }
 }

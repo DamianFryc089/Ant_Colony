@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 class AntNest extends Object {
-	static int foodInNest = 100;
+	static int foodInNest = 0;
 	static void increaceFood()
 	{
 		foodInNest++;
