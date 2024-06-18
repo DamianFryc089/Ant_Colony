@@ -26,7 +26,7 @@ public class AntColony{
         display = new Display(args, this);
 
         gameMap.generateMap(display.getWidth(), display.getHeight());
-        gameMap.tiles[100][250].cellOccupant = new Ant(100,250,1, random,gameMap);
+//        gameMap.tiles[100][250].cellOccupant = new Ant(100,250,1, random,gameMap);
             // Timer z pętlą symulacji na innym wątku
         timer = new Timer();
         timer.schedule(new MainLoop(), 0, (long) 1000/(int)targetFPS);
@@ -38,8 +38,10 @@ public class AntColony{
         public void run() {
             if (isPaused)
                 return;
-            if (tick % 100000 == 0)
-                gameMap.generateFoodField(25);
+            if (--gameMap.foodTimer <= 0) {
+                gameMap.foodTimer = gameMap.foodCooldown;
+                gameMap.generateFoodField(20);
+            }
             if(tick % 3 == 0) {
                 gameMap.spreadScentValues(1, 255);//rozprzestrzenianie się zapachu na sąsiednie pola
                 //gameMap.decreaseScentValues(1, 255);
@@ -47,7 +49,6 @@ public class AntColony{
             for (int i = 0; i < objects.size(); i++) objects.get(i).action();
             display.repaint();
             tick++;
-//            System.out.println(random.nextInt(100));
         }
     }
 

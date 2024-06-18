@@ -1,16 +1,18 @@
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Random;
 
 class AntNest extends Object {
-	static int foodInNest = 0;
-	static void increaceFood()
+	static int foodInNest = 10;
+	static void increaseFood()
 	{
 		foodInNest++;
 	}
 	AntNest(int x, int y, int size, Random random, GameMap gameMap)
 	{
 		super(x, y, size, random, gameMap);
+		for (int i = 0; i < 10; i++) {
+			spawnAnt();
+		}
 	}
 
 	@Override
@@ -19,11 +21,10 @@ class AntNest extends Object {
 		if (foodInNest >= 10)
 			if(spawnAnt())
 				foodInNest-=10;
-		gameMap.tiles[x][y].setScentValue(-100);
+		generateScent();
 	}
 
-	boolean spawnAnt()
-	{
+	boolean spawnAnt() {
 		int startX = x;
 		int startY = y-1;
 		switch (random.nextInt(4))
@@ -80,6 +81,27 @@ class AntNest extends Object {
 		return false;
 	}
 
+	void generateScent() {
+		int maxGeneratedScent = -100;
+			// Generowanie z gory
+		for (int i = 0; i < size+2; i++) {
+			gameMap.tiles[x+i][y-1].setScentValue(Math.min(gameMap.tiles[x+i][y-1].getScentValue(), maxGeneratedScent));
+		}
+			// Generowanie z prawej
+		for (int i = 0; i < size+2; i++) {
+			gameMap.tiles[x+size+1][i+y].setScentValue(Math.min(gameMap.tiles[x+size+1][i+y].getScentValue(), maxGeneratedScent));
+		}
+
+			// Generowanie z dołu
+		for (int i = 0; i < size+2; i++) {
+			gameMap.tiles[x+i][y+size+1].setScentValue(Math.min(gameMap.tiles[x+i][y+size+1].getScentValue(), maxGeneratedScent));
+		}
+
+			// Generowanie z lewej
+		for (int i = 0; i < size+2; i++) {
+			gameMap.tiles[x-1][i+y].setScentValue(Math.min(gameMap.tiles[x-1][i+y].getScentValue(), maxGeneratedScent));
+		}
+	}
 	@Override
 	Color getColor() {return new Color(119, 52, 29);}
 

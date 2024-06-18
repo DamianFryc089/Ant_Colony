@@ -6,12 +6,12 @@ public class Food extends Object{
 	int foodValue;
 	Food(int x, int y, int size, Random random, GameMap gameMap) {
 		super(x, y, size, random, gameMap);
-		foodValue = 100;
+		foodValue = 1;
 		foodCounter+=foodValue;
 	}
 	@Override
 	void action(){
-		gameMap.tiles[x][y].setScentValue(255);
+		gameMap.tiles[x][y].setScentValue(100);
 	}
 	Food(int x, int y, int size, Random random, GameMap gameMap, int foodValue) {
 		super(x, y, size, random, gameMap);

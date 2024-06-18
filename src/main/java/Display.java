@@ -7,6 +7,8 @@ import java.util.Timer;
 public class Display extends JPanel implements KeyListener {
 
 	AntColony simulation;
+	boolean stats = true;
+
 	Display(String[] args, AntColony simulation)
 	{
 		this.simulation = simulation;
@@ -56,20 +58,24 @@ public class Display extends JPanel implements KeyListener {
 		g.drawImage(simulation.gameMap.getScentImage(),0,0, null);
 		g.drawImage(simulation.gameMap.getObjectsImage(),0,0,null);
 
+		if(stats) {
 			// Rysowanie liczby ticków
-		g.drawChars(("Tick: " + simulation.tick).toCharArray(), 0,("Tick: " + simulation.tick).length(),10,15);
+			g.drawChars(("Tick: " + simulation.tick).toCharArray(), 0, ("Tick: " + simulation.tick).length(), 10, 15);
 			// Rysowanie liczby mrówek
-		g.drawChars(("Ants: " + Ant.antCounter).toCharArray(), 0,("Ants: " + Ant.antCounter).length(),10,30);
+			g.drawChars(("Ants: " + Ant.antCounter).toCharArray(), 0, ("Ants: " + Ant.antCounter).length(), 10, 30);
 			// Rysowanie liczby pozostałego jedzenia na planszy
-		g.drawChars(("Food left: " + Food.foodCounter).toCharArray(), 0,("Food left: " + Food.foodCounter).length(),10,45);
+			g.drawChars(("Food left: " + Food.foodCounter).toCharArray(), 0, ("Food left: " + Food.foodCounter).length(), 10, 45);
+			// Rysowanie liczby tików pomiędzy pojawieniami się jedzenia
+			g.drawChars(("Food every: " + simulation.gameMap.foodCooldown).toCharArray(), 0, ("Food every: " + simulation.gameMap.foodCooldown).length(), 10, 60);
+			// Rysowanie liczby tików do pojawienia się jedzenia
+			g.drawChars(("New food in: " + simulation.gameMap.foodTimer).toCharArray(), 0, ("New food in: " + simulation.gameMap.foodTimer).length(), 10, 75);
 			// Rysowanie liczby fps
-		g.drawChars(("FPS: "+(int)simulation.targetFPS).toCharArray(), 0,("FPS: "+(int)simulation.targetFPS).length(),getWidth()-32- 7*(""+(int)simulation.targetFPS).length(),10);
+			g.drawChars(("FPS: " + (int) simulation.targetFPS).toCharArray(), 0, ("FPS: " + (int) simulation.targetFPS).length(), getWidth() - 32 - 7 * ("" + (int) simulation.targetFPS).length(), 10);
+		}
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -79,13 +85,21 @@ public class Display extends JPanel implements KeyListener {
 		if (e.getKeyChar() == 'x' || e.getKeyChar() == KeyEvent.VK_ESCAPE)
 			System.exit(0);
 
-		if (e.getKeyChar() == 's')
-			SaveHandler.save(simulation);
+		if (e.getKeyCode() == KeyEvent.VK_F3 || e.getKeyChar() == 'i') {
+			stats=!stats;
+		}
+
+		if (e.getKeyChar() == 's') {
+			simulation.isPaused = true;
+            SaveHandler.save(simulation);
+			simulation.isPaused = false;
+		}
 		if (e.getKeyChar() == 'l') {
 			simulation.isPaused = true;
 			SaveHandler.load(simulation);
 			repaint();
 		}
+
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			simulation.targetFPS = Math.min(1000, simulation.targetFPS*11/10);
 			simulation.updateFPS();
@@ -93,6 +107,18 @@ public class Display extends JPanel implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			simulation.targetFPS = Math.max(1, simulation.targetFPS*9/10);
 			simulation.updateFPS();
+		}
+
+		if (e.getKeyChar() == 'f') {
+			simulation.gameMap.foodTimer = 0;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			simulation.gameMap.foodCooldown = Math.max(100, simulation.gameMap.foodCooldown/10);
+			simulation.gameMap.foodTimer = Math.min(simulation.gameMap.foodTimer, simulation.gameMap.foodCooldown);
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			simulation.gameMap.foodCooldown = Math.min(1000000, simulation.gameMap.foodCooldown*10);
+			simulation.gameMap.foodTimer = simulation.gameMap.foodCooldown;
 		}
 	}
 

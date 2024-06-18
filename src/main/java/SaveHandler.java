@@ -21,7 +21,7 @@ public class SaveHandler {
             // zapis zapachów
         for (int i = 0; i < simulation.gameMap.getHeight(); i++) {
             for (int j = 0; j < simulation.gameMap.getWidth(); j++) {
-                content += simulation.gameMap.tiles[i][j].getScentValue() + "|";
+                content += simulation.gameMap.tiles[j][i].getScentValue() + "|";
             }
             content += "\n";
         }
@@ -41,6 +41,7 @@ public class SaveHandler {
 
     public static void load(AntColony simulation)
     {
+
         try (BufferedReader reader = new BufferedReader(new FileReader("save.txt"))) {
             String line = reader.readLine();
             if (line == null) return;
@@ -56,8 +57,8 @@ public class SaveHandler {
 
             for (int i = 0; i < height; i++) {
                     // sczytanie z wiersza wartości
-                String hhh = reader.readLine();
-                String[] scentValuesS = hhh.split("\\|");
+                String row = reader.readLine();
+                String[] scentValuesS = row.split("\\|");
                 int[] scentValues = new int[scentValuesS.length];
                 for (int j = 0; j < scentValuesS.length; j++) {
                     scentValues[j] = Integer.parseInt(scentValuesS[j]);
@@ -65,7 +66,7 @@ public class SaveHandler {
 
                     // nadpisanie wartości
                 for (int j = 0; j < width; j++) {
-                    simulation.gameMap.tiles[i][j].setScentValue(scentValues[j]);
+                    simulation.gameMap.tiles[j][i].setScentValue(scentValues[j]);
                 }
             }
 
@@ -89,11 +90,7 @@ public class SaveHandler {
                                 simulation.gameMap,
                                 Boolean.parseBoolean(objectInfo[4]),
                                 Integer.parseInt(objectInfo[5]),
-                                Integer.parseInt(objectInfo[6]),
-                                Integer.parseInt(objectInfo[7]),
-                                Integer.parseInt(objectInfo[8]),
-                                Integer.parseInt(objectInfo[9]),
-                                Integer.parseInt(objectInfo[10])
+                                Integer.parseInt(objectInfo[6])
                         );
                         break;
                     case "class AntNest":

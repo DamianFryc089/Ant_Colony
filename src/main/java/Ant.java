@@ -6,12 +6,13 @@ public class Ant extends Object{
     boolean carryFood = false;
     int k; //kierunek w krórym idzie mrówka(NIE DOTYKAĆ!!!)
     int a=50; // 2/a szansa na to że mrówka losowo zmieni kierunek(tylko w tedy gdy mrówka nie wyczuwa zapachu)
+
     Ant(int x, int y, int size, Random random, GameMap gameMap) {
         super(x, y, size, random, gameMap);
         antCounter++;
         k = random.nextInt(0,4);
     }
-    Ant(int x, int y, int size, Random random, GameMap gameMap, boolean carryFood, int lifeTime, int k, int b, int p, int f, int a)
+    Ant(int x, int y, int size, Random random, GameMap gameMap, boolean carryFood, int k, int a)
     {
         super(x, y, size, random, gameMap);
         this.carryFood = carryFood;
@@ -72,8 +73,9 @@ public class Ant extends Object{
         gameMap.placeObject(this);
     }
     int logika(int s, int r, int l){
+
         if(nose()){
-            if(carryFood==true)carryFood=false;
+            if(carryFood)carryFood=false;
             else carryFood=true;
             return 3;}
         if( s==-256 && r==-256 && l==-256)return 3;//s-prosto r-prawo l-lewo
@@ -189,20 +191,16 @@ public class Ant extends Object{
     {
         if(!carryFood) {
             if (x + 1 < gameMap.getWidth() && gameMap.tiles[x + 1][y].cellOccupant != null && gameMap.tiles[x + 1][y].cellOccupant.getClass() == Food.class){
-                gameMap.tiles[x + 1][y].cellOccupant = null;
-                gameMap.tiles[x+1][y].setTileColor(new Color(0,0,0));
+                ((Food) gameMap.tiles[x + 1][y].cellOccupant).decreaseFood();
                 return true;}
             if (y + 1 < gameMap.getHeight() && gameMap.tiles[x][y + 1].cellOccupant != null && gameMap.tiles[x][y + 1].cellOccupant.getClass() == Food.class){
-                gameMap.tiles[x][y + 1].cellOccupant = null;
-                gameMap.tiles[x][y + 1].setTileColor(new Color(0,0,0));
+                ((Food) gameMap.tiles[x][y + 1].cellOccupant).decreaseFood();
                 return true;}
             if (x - 1 > 0 && gameMap.tiles[x - 1][y].cellOccupant != null && gameMap.tiles[x - 1][y].cellOccupant.getClass() == Food.class){
-                gameMap.tiles[x - 1][y].cellOccupant = null;
-                gameMap.tiles[x - 1][y].setTileColor(new Color(0,0,0));
+                ((Food) gameMap.tiles[x - 1][y].cellOccupant).decreaseFood();
                 return true;}
             if (y - 1 > 0 && gameMap.tiles[x][y - 1].cellOccupant != null && gameMap.tiles[x][y - 1].cellOccupant.getClass() == Food.class){
-                gameMap.tiles[x][y - 1].cellOccupant = null;
-                gameMap.tiles[x][y - 1].setTileColor(new Color(0,0,0));
+                ((Food) gameMap.tiles[x][y - 1].cellOccupant).decreaseFood();
                 return true;}
         }
         else {

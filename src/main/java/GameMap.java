@@ -12,6 +12,8 @@ public class GameMap {
 	Random random;
 	ArrayList<Object> objects;
 	int scale, xn, yn;
+	int foodCooldown = 100000;
+	int foodTimer = 0;
 	GameMap(Random random, ArrayList<Object> objects, int scale) {
 		this.random = random;
 		this.objects = objects;
@@ -176,12 +178,13 @@ public class GameMap {
 	void spreadScentValues(int value, int maxvalue) {
 		int Tab[][];
 		Tab = new int[width][height];
+
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
 				if(tiles[x][y].scentValue>0) {
 					if(Tab[x][y]<tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue-1;
-					if(x-1>0 && tiles[x-1][y].scentValue>=0 && tiles[x-1][y].scentValue<tiles[x][y].scentValue-1 && Tab[x-1][y]<tiles[x][y].scentValue-1 && tiles[x-1][y].cellOccupant==null) Tab[x-1][y]=tiles[x][y].scentValue-1;
-					if(y-1>0 && tiles[x][y-1].scentValue>=0 && tiles[x][y-1].scentValue<tiles[x][y].scentValue-1 && Tab[x][y-1]<tiles[x][y].scentValue-1 && tiles[x][y-1].cellOccupant==null) Tab[x][y-1]=tiles[x][y].scentValue-1;
+					if(x-1>-1 && tiles[x-1][y].scentValue>=0 && tiles[x-1][y].scentValue<tiles[x][y].scentValue-1 && Tab[x-1][y]<tiles[x][y].scentValue-1 && tiles[x-1][y].cellOccupant==null) Tab[x-1][y]=tiles[x][y].scentValue-1;
+					if(y-1>-1 && tiles[x][y-1].scentValue>=0 && tiles[x][y-1].scentValue<tiles[x][y].scentValue-1 && Tab[x][y-1]<tiles[x][y].scentValue-1 && tiles[x][y-1].cellOccupant==null) Tab[x][y-1]=tiles[x][y].scentValue-1;
 					if(x+1<width && tiles[x+1][y].scentValue>=0 && tiles[x+1][y].scentValue<tiles[x][y].scentValue-1 && Tab[x+1][y]<tiles[x][y].scentValue-1 && tiles[x+1][y].cellOccupant==null) Tab[x+1][y]=tiles[x][y].scentValue-1;
 					if(y+1<height && tiles[x][y+1].scentValue>=0 && tiles[x][y+1].scentValue<tiles[x][y].scentValue-1 && Tab[x][y+1]<tiles[x][y].scentValue-1 && tiles[x][y+1].cellOccupant==null) Tab[x][y+1]=tiles[x][y].scentValue-1;
 				}
@@ -194,11 +197,53 @@ public class GameMap {
 				}
 			}
 		}
+
+//		for(int x = 0; x < width; x++){
+//			for(int y = 0; y < height; y++){
+//				if (tiles[x][y].cellOccupant != null) continue;
+//				int[] scentsAround = new int[8];
+//				if(x-1>=0) 		scentsAround[0] = tiles[x-1][y].scentValue;
+//				if(y-1>=0) 		scentsAround[1] = tiles[x][y-1].scentValue;
+//				if(x+1<width) 	scentsAround[2] = tiles[x+1][y].scentValue;
+//				if(y+1<height) 	scentsAround[3] = tiles[x][y+1].scentValue;
+//
+//				if(x-1>=0 && y-1>=0) 		scentsAround[4] = tiles[x-1][y-1].scentValue;
+//				if(x+1<width && y-1>=0) 	scentsAround[5] = tiles[x+1][y-1].scentValue;
+//				if(x+1<width && y+1<height) scentsAround[6] = tiles[x+1][y+1].scentValue;
+//				if(x-1>=0 && y+1<height) 	scentsAround[7] = tiles[x-1][y+1].scentValue;
+//
+//
+//
+//				int scentMax = 0;
+//				int scentMin = 0;
+//
+//				for (int i = 0; i < scentsAround.length; i++) {
+//					if (scentMax < scentsAround[i]) scentMax = scentsAround[i];
+//					if (scentMin > scentsAround[i]) scentMin = scentsAround[i];
+//				}
+//
+//				Tab[x][y] = (int) (scentMin + scentMax * 1.3);
+//
+//				if (Tab[x][y] > 0) {
+//					Tab[x][y] = Math.min(Tab[x][y],  scentMax-1);
+////					Tab[x][y]--;
+//				}
+//
+//				if (Tab[x][y] < 0) {
+//					Tab[x][y] = Math.max(Tab[x][y],  scentMin+1);
+////					Tab[x][y]++;
+//				}
+//			}
+//		}
+
+
 		for(int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				tiles[x][y].setScentValue(Tab[x][y]);
 			}
 		}
+
+
 	}
 
 
@@ -227,8 +272,15 @@ public class GameMap {
 		}
 	}
 	void generateFoodField(int size){
-		int randX = random.nextInt(width/10, width - width/5);
-		int randY = random.nextInt(height/10, height - height/5);
+		int randX;
+		int randY;
+
+		int proba = 0;
+		do {
+			randX = random.nextInt(width/10, width - width/5);
+			randY = random.nextInt(height/10, height - height/5);
+			proba++;
+		}while (Math.abs(randX - xn) < width / (4+proba*0.1) && Math.abs(randY - yn) < height / (4+proba*0.1));
 
 		for (int i = 0; i < size; i++) {
 			for (int j = size - i; j < size + i; j++) {
@@ -245,7 +297,6 @@ public class GameMap {
 	{
 		if (x >= 0 && x < width && y >= 0 && y < height && tiles[x][y].cellOccupant == null) {
 			tiles[x][y].cellOccupant = new Food(x, y, 1, random, this);
-//			objects.add(tiles[x][y].cellOccupant);
 			return true;
 		}
 		return false;
