@@ -6,5 +6,8 @@ public class Wall extends Object{
 		super(x, y, size, random, gameMap);
 	}
 
-	Color getColor(){ return new Color(120, 120, 120);}
+	@Override
+	void action() {}
+
+	public Color getColor(){ return new Color(120, 120, 120);}
 }

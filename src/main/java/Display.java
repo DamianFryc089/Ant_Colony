@@ -6,14 +6,13 @@ import java.util.Timer;
 
 public class Display extends JPanel implements KeyListener {
 
-	AntColony simulation;
-	int stats = 2;
-	long simulationStartTime = System.currentTimeMillis();
+	private final AntColony simulation;
+	private int stats = 2;
+	private final long simulationStartTime = System.currentTimeMillis();
 
 	Display(String[] args, AntColony simulation)
 	{
 		this.simulation = simulation;
-
 
 			// Tworzenie okna
 		JFrame frame = new JFrame("Ant Colony");
@@ -34,7 +33,6 @@ public class Display extends JPanel implements KeyListener {
 			frame.setSize(new Dimension(size[0] + 16, size[1] + 39));
 			frame.setVisible(true);
 			frame.getContentPane().add(this);
-//			frame.add(this);
 			frame.setVisible(true);
 		}
 		else {
@@ -43,7 +41,6 @@ public class Display extends JPanel implements KeyListener {
 			frame.setUndecorated(true);
 			frame.setVisible(true);
 			frame.getContentPane().add(this);
-//			frame.add(this);
 			frame.setVisible(true);
 		}
 
@@ -131,7 +128,5 @@ public class Display extends JPanel implements KeyListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-
-	}
+	public void keyReleased(KeyEvent e) {}
 }

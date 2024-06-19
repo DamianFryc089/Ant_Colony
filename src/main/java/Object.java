@@ -2,9 +2,9 @@ import java.awt.*;
 import java.util.Random;
 
 public abstract class Object {
-    int x, y, size;
-    Random random;
-    GameMap gameMap;
+    protected int x, y, size;
+    protected Random random;
+    protected GameMap gameMap;
 
     Object(int x, int y, int size, Random random, GameMap gameMap)
     {
@@ -20,11 +20,11 @@ public abstract class Object {
         gameMap.takeObject(this);
         gameMap.objects.remove(this);
     }
-    void action(){}
-    Color getColor(){ return new Color(255, 0, 0);}
-    int getX(){ return x;}
-    int getY(){ return y;}
-    int getSize(){ return size;}
+    abstract void action();
+    public Color getColor(){ return new Color(255, 0, 0);}
+    public int getX(){ return x;}
+    public int getY(){ return y;}
+    public int getSize(){ return size;}
 
     @Override
     public String toString() {

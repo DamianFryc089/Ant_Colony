@@ -3,9 +3,9 @@ import java.util.Random;
 
 public class Ant extends Object{
     static int antCounter = 0;
-    boolean carryFood = false;
-    int k; //kierunek w krórym idzie mrówka(NIE DOTYKAĆ!!!)
-    int a=50; // 2/a szansa na to że mrówka losowo zmieni kierunek(tylko w tedy gdy mrówka nie wyczuwa zapachu)
+    public boolean carryFood = false;
+    private int k; //kierunek w krórym idzie mrówka(NIE DOTYKAĆ!!!)
+    private int a=50; // 2/a szansa na to że mrówka losowo zmieni kierunek(tylko w tedy gdy mrówka nie wyczuwa zapachu)
     Ant(int x, int y, int size, Random random, GameMap gameMap) {
         super(x, y, size, random, gameMap);
         antCounter++;
@@ -78,7 +78,7 @@ public class Ant extends Object{
         if(x+1>gameMap.getWidth()||x<1||gameMap.getHeight()<y+1||y<1){x= gameMap.getWidth()/2;y= gameMap.getHeight()/2;}
         gameMap.placeObject(this);
     }
-    int logika(int s, int r, int l){
+    private int logika(int s, int r, int l){
 
         if(nose()){
             if(carryFood) {
@@ -112,7 +112,7 @@ public class Ant extends Object{
         if( s == l )return 2;
         return 3;
     }
-    boolean nose()
+    private boolean nose()
     {
         if(!carryFood) {
             if (x + 1 < gameMap.getWidth() && gameMap.tiles[x + 1][y].cellOccupant != null && gameMap.tiles[x + 1][y].cellOccupant.getClass() == Food.class){
@@ -141,7 +141,7 @@ public class Ant extends Object{
         return false;
     }
     @Override
-    Color getColor() {return new Color(0,0,0);}
+    public Color getColor() {return new Color(0,0,0);}
 
     @Override
     void death() {

@@ -7,13 +7,13 @@ public class AntColony{
     Random random;
     long seed;
     ArrayList<Object> objects;
-    Display display;
-    GameMap gameMap;
+    private final Display display;
+    public final GameMap gameMap;
     float targetFPS = 60;
-    final int scale = 2; // max 4? Może wywalić error jak będzie więcej
+    final int scale = 2;
     long tick = 0;
     boolean isPaused = false;
-    Timer timer;
+    private Timer timer;
 
     public AntColony(String[] args) {
         random = new Random();
@@ -26,7 +26,7 @@ public class AntColony{
         display = new Display(args, this);
 
         gameMap.generateMap(display.getWidth(), display.getHeight());
-//        gameMap.tiles[100][250].cellOccupant = new Ant(100,250,1, random,gameMap);
+
             // Timer z pętlą symulacji na innym wątku
         timer = new Timer();
         timer.schedule(new MainLoop(), 0, (long) 1000/(int)targetFPS);
@@ -44,7 +44,6 @@ public class AntColony{
             }
             if(tick % 3 == 0) {
                 gameMap.spreadScentValues(1, 255);//rozprzestrzenianie się zapachu na sąsiednie pola
-                //gameMap.decreaseScentValues(1, 255);
             }
             for (int i = 0; i < objects.size(); i++) objects.get(i).action();
             display.repaint();
@@ -52,7 +51,7 @@ public class AntColony{
         }
     }
 
-    void updateFPS()
+    public void updateFPS()
     {
         if (timer != null) timer.cancel();
         timer = new Timer();

@@ -1,13 +1,9 @@
 import java.awt.*;
 import java.util.Random;
 
-class AntNest extends Object {
-	static int foodInNest = 10;
-	int ticksSinceFoodCheck = 0;
-	static void increaseFood()
-	{
-		foodInNest++;
-	}
+public class AntNest extends Object {
+	public static int foodInNest = 10;
+	private int ticksSinceFoodCheck = 0;
 	AntNest(int x, int y, int size, Random random, GameMap gameMap)
 	{
 		super(x, y, size, random, gameMap);
@@ -18,11 +14,6 @@ class AntNest extends Object {
 
 	@Override
 	void action() {
-		//foodInNest++; // Automatyczne generowanie mrówek
-//		if (foodInNest >= 10)
-//			if(spawnAnt())
-//				foodInNest-=10;
-//		generateScent();
 		ticksSinceFoodCheck++;
 		if (ticksSinceFoodCheck >= 250)
 		{
@@ -33,6 +24,7 @@ class AntNest extends Object {
 				foodInNest = 0;
 				for (int i = 0; i < gameMap.objects.size(); i++) {
 					if (gameMap.objects.get(i).getClass() == Ant.class) {
+							// mrówka która nosi jedzenie nie umiera
 //						if (((Ant) gameMap.objects.get(i)).carryFood)
 //							continue;
 						gameMap.objects.get(i).death();
@@ -43,11 +35,9 @@ class AntNest extends Object {
 			else
 				spawnAnt();
 		}
-		// x mrówek i y jedzenia, y=y-x*a > 0 ? x++ : x--
-
 	}
 
-	boolean spawnAnt() {
+	private void spawnAnt() {
 		int startX = x;
 		int startY = y-1;
 		switch (random.nextInt(4))
@@ -81,8 +71,8 @@ class AntNest extends Object {
 		int newY = startY;
 		do {
 			if(gameMap.tiles[newX][newY].cellOccupant == null){
-				gameMap.tiles[newX][newY].cellOccupant = new Ant(newX,newY,1, random,gameMap);
-				return true;
+				gameMap.tiles[newX][newY].cellOccupant = new Ant(newX,newY,1, random, gameMap);
+				return;
 			}
 			if (newY == y-1){
 				newX++;
@@ -101,10 +91,9 @@ class AntNest extends Object {
 				if (newY == y-1) newX++;
 			}
 		}while (startY != newY || startX != newX);
-		return false;
 	}
 
-	void generateScent() {
+	private void generateScent() {
 		int maxGeneratedScent = -100;
 			// Generowanie z gory
 		for (int i = 0; i < size+2; i++) {
@@ -126,7 +115,7 @@ class AntNest extends Object {
 		}
 	}
 	@Override
-	Color getColor() {return new Color(119, 52, 29);}
+	public Color getColor() {return new Color(119, 52, 29);}
 
 	@Override
 	public String toString() {
