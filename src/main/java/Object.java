@@ -16,7 +16,10 @@ public abstract class Object {
         gameMap.placeObject(this);
         gameMap.objects.add(this);
     }
-    void death() {gameMap.objects.remove(this);}
+    void death() {
+        gameMap.takeObject(this);
+        gameMap.objects.remove(this);
+    }
     void action(){}
     Color getColor(){ return new Color(255, 0, 0);}
     int getX(){ return x;}

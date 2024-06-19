@@ -3,6 +3,7 @@ import java.util.Random;
 
 class AntNest extends Object {
 	static int foodInNest = 10;
+	int ticksSinceFoodCheck = 0;
 	static void increaseFood()
 	{
 		foodInNest++;
@@ -18,10 +19,35 @@ class AntNest extends Object {
 	@Override
 	void action() {
 		//foodInNest++; // Automatyczne generowanie mrówek
-		if (foodInNest >= 10)
-			if(spawnAnt())
-				foodInNest-=10;
-		generateScent();
+//		if (foodInNest >= 10)
+//			if(spawnAnt())
+//				foodInNest-=10;
+//		generateScent();
+		System.out.println(foodInNest);
+		ticksSinceFoodCheck++;
+		if (ticksSinceFoodCheck >= 250)
+		{
+			ticksSinceFoodCheck = 0;
+			foodInNest -= Ant.antCounter * 1;
+			if (foodInNest <= 0)
+			{
+				foodInNest = 0;
+				for (int i = 0; i < gameMap.objects.size(); i++) {
+					if (gameMap.objects.get(i).getClass() == Ant.class) {
+//						if (((Ant) gameMap.objects.get(i)).carryFood)
+//							continue;
+						gameMap.objects.get(i).death();
+						break;
+					}
+				}
+			}
+			else
+				spawnAnt();
+		}
+
+
+		// x mrówek i y jedzenia, y=y-x*a > 0 ? x++ : x--
+
 	}
 
 	boolean spawnAnt() {

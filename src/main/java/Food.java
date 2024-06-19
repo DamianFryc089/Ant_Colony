@@ -11,7 +11,6 @@ public class Food extends Object{
 	}
 	@Override
 	void action(){
-
 		//gameMap.tiles[x][y].setScentValue(100);
 	}
 	Food(int x, int y, int size, Random random, GameMap gameMap, int foodValue) {
@@ -22,7 +21,6 @@ public class Food extends Object{
 	void decreaseFood() {
 		foodValue--;
 		foodCounter--;
-		AntNest.increaseFood();
 		if (foodValue <= 0) {
 			death();
 			gameMap.takeObject(this);

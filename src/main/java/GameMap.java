@@ -20,8 +20,6 @@ public class GameMap {
 		this.scale = scale;
 	}
 
-
-
 	public class Tile{
 		int x, y;
 		private int scentValue;

@@ -48,28 +48,28 @@ public class Ant extends Object{
         {
             case 0:
                 z=logika(tab[0], tab[3], tab[2]);
-                if(z==3){k=1;return;}
+                if(z==3){k=1;}
                 if(z==0){x+=1;}
                 if(z==1){y-=1;k=3;}
                 if(z==2){y+=1;k=2;}
                 break;
             case 1:
                 z=logika(tab[1], tab[2], tab[3]);
-                if(z==3){k=0;return;}
+                if(z==3){k=0;}
                 if(z==0){x-=1;}
                 if(z==1){y+=1;k=2;}
                 if(z==2){y-=1;k=3;}
                 break;
             case 2:
                 z=logika(tab[2], tab[0], tab[1]);
-                if(z==3){k=3;return;}
+                if(z==3){k=3;}
                 if(z==0){y+=1;}
                 if(z==1){x+=1;k=0;}
                 if(z==2){x-=1;k=1;}
                 break;
             case 3:
                 z=logika(tab[3], tab[1], tab[0]);
-                if(z==3){k=2;return;}
+                if(z==3){k=2;}
                 if(z==0){y-=1;}
                 if(z==1){x-=1;k=1;}
                 if(z==2){x+=1;k=0;}
@@ -81,8 +81,13 @@ public class Ant extends Object{
     int logika(int s, int r, int l){
 
         if(nose()){
-            if(carryFood)carryFood=false;
-            else carryFood=true;
+            if(carryFood) {
+                carryFood = false;
+                AntNest.foodInNest++;
+            }
+
+            else
+                carryFood=true;
             return 3;}
         if( s==-256 && r==-256 && l==-256)return 3;//s-prosto r-prawo l-lewo
         if( s > r && s > l ) return 0;
