@@ -23,7 +23,6 @@ class AntNest extends Object {
 //			if(spawnAnt())
 //				foodInNest-=10;
 //		generateScent();
-		System.out.println(foodInNest);
 		ticksSinceFoodCheck++;
 		if (ticksSinceFoodCheck >= 250)
 		{
@@ -44,8 +43,6 @@ class AntNest extends Object {
 			else
 				spawnAnt();
 		}
-
-
 		// x mrówek i y jedzenia, y=y-x*a > 0 ? x++ : x--
 
 	}

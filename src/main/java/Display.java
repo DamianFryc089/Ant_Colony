@@ -7,7 +7,8 @@ import java.util.Timer;
 public class Display extends JPanel implements KeyListener {
 
 	AntColony simulation;
-	boolean stats = true;
+	int stats = 2;
+	long simulationStartTime = System.currentTimeMillis();
 
 	Display(String[] args, AntColony simulation)
 	{
@@ -58,9 +59,15 @@ public class Display extends JPanel implements KeyListener {
 		g.drawImage(simulation.gameMap.getScentImage(),0,0, null);
 		g.drawImage(simulation.gameMap.getObjectsImage(),0,0,null);
 
-		if(stats) {
-			// Rysowanie liczby ticków
-			g.drawChars(("Tick: " + simulation.tick).toCharArray(), 0, ("Tick: " + simulation.tick).length(), 10, 15);
+		if(stats != 0) {
+			if(stats != 2)
+				// Rysowanie liczby ticków
+				g.drawChars(("Tick: " + simulation.tick).toCharArray(), 0, ("Tick: " + simulation.tick).length(), 10, 15);
+			else {
+				// Rysowanie liczby sekund
+				long simulationTime = (System.currentTimeMillis() - simulationStartTime) / 1000;
+				g.drawChars(("Time: " + simulationTime).toCharArray(), 0, ("Time: " + simulationTime).length(), 10, 15);
+			}
 			// Rysowanie liczby mrówek
 			g.drawChars(("Ants: " + Ant.antCounter).toCharArray(), 0, ("Ants: " + Ant.antCounter).length(), 10, 30);
 			// Rysowanie liczby pozostałego jedzenia na planszy
@@ -86,7 +93,8 @@ public class Display extends JPanel implements KeyListener {
 			System.exit(0);
 
 		if (e.getKeyCode() == KeyEvent.VK_F3 || e.getKeyChar() == 'i') {
-			stats=!stats;
+			stats = (stats + 1) % 3;
+			System.out.println(stats);
 		}
 
 		if (e.getKeyChar() == 's') {
