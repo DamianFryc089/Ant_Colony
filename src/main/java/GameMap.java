@@ -165,13 +165,13 @@ public class GameMap {
 					if(Tab[x][y]<tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue-1;
 					if(tiles[x][y].scentValue>1) {
 						if (x - 1 > -1 && tiles[x - 1][y].scentValue < 1 && tiles[x - 1][y].scentValue < tiles[x][y].scentValue - 1 && Tab[x - 1][y] < tiles[x][y].scentValue - 1 && tiles[x - 1][y].cellOccupant == null)
-							Tab[x - 1][y] = 1;//(tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
+							Tab[x - 1][y] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
 						if (y - 1 > -1 && tiles[x][y - 1].scentValue < 1 && tiles[x][y - 1].scentValue < tiles[x][y].scentValue - 1 && Tab[x][y - 1] < tiles[x][y].scentValue - 1 && tiles[x][y - 1].cellOccupant == null)
-							Tab[x][y - 1] = 1;//(tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
+							Tab[x][y - 1] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
 						if (x + 1 < width && tiles[x + 1][y].scentValue < 1 && tiles[x + 1][y].scentValue < tiles[x][y].scentValue - 1 && Tab[x + 1][y] < tiles[x][y].scentValue - 1 && tiles[x + 1][y].cellOccupant == null)
-							Tab[x + 1][y] = 1;//(tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
+							Tab[x + 1][y] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
 						if (y + 1 < height && tiles[x][y + 1].scentValue < 1 && tiles[x][y + 1].scentValue < tiles[x][y].scentValue - 1 && Tab[x][y + 1] < tiles[x][y].scentValue - 1 && tiles[x][y + 1].cellOccupant == null)
-							Tab[x][y + 1] = 1;//(tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
+							Tab[x][y + 1] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
 					}
 				}
 			}
