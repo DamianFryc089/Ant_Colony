@@ -6,7 +6,7 @@ import java.util.Random;
 public class GameMap {
 	private int width, height;
 	public Tile[][] tiles;
-	private BufferedImage backgroundImage, scentImage, objectsImage;
+	private BufferedImage backgroundImage, foodScentImage, antScentImage, objectsImage;
 	Random random;
 	ArrayList<Object> objects;
 	public final int scale;
@@ -22,34 +22,28 @@ public class GameMap {
 
 	public class Tile{
 		private final int x, y;
-		private float scentValue;
+		private float antScentValue;
+		private float foodScentValue;
 		public Object cellOccupant;
 		Color tileColor;
 
 		Tile(int x, int y) {
 			this.x = x;
 			this.y = y;
-			scentValue = 0.0F;
+			antScentValue = 0.0F;
 			cellOccupant = null;
 		}
 		void setTileColor(Color newTileColor) {tileColor = newTileColor;}
-		float getScentValue() {return scentValue;}
-		void increaseScentValue(int value) {
-			scentValue+=value;
-			if(scentValue>255) scentValue=255;
-			if(scentValue<-255) scentValue=-255;
-			if(scentValue<0) scentImage.setRGB(x, y,	new Color(255, 0, 0, Math.min(-scentValue,255)).getRGB());
-			else  scentImage.setRGB(x, y,	new Color(255, 255, 255, Math.min(scentValue,255)).getRGB());
-			//scentImage.setRGB(x, y, new Color(0, 0, 0, Math.min(scentValue,255)).getRGB());
-		}
-		void setScentValue(int value)
+		float getAntScentValue() {return antScentValue;}
+		void setAntScentValue(float value)
 		{
-			scentValue=value;
-			if(scentValue>255) scentValue=255;
-			if(scentValue<-255) scentValue=-255;
-			if(scentValue<0) scentImage.setRGB(x, y,	new Color(255, 0, 0, Math.min(-scentValue,255)).getRGB());
-			else  scentImage.setRGB(x, y,	new Color(255, 255, 255, Math.min(scentValue,255)).getRGB());
-			//scentImage.setRGB(x, y, new Color(0, 0, 0, Math.min(scentValue,255)).getRGB());
+			antScentValue = value;
+			antScentImage.setRGB(x, y,	new Color(255, 0, 0, Math.min((int)(antScentValue*2.55),255)).getRGB());
+		}
+		void setFoodScentValue(float value)
+		{
+			foodScentValue = value;
+			foodScentImage.setRGB(x, y,	new Color(0, 0, 255, Math.min((int)(foodScentValue*2.55),255)).getRGB());
 		}
 	}
 
@@ -58,7 +52,8 @@ public class GameMap {
 		this.height = frameHeight/scale;
 		tiles = new Tile[width][height];
 		backgroundImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		scentImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		foodScentImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		antScentImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		objectsImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
 		for (int x = 0; x < width; x++) {
@@ -67,34 +62,34 @@ public class GameMap {
 				tiles[x][y].setTileColor(new Color(255, 255, 255));
 //				tiles[x][y].setTileColor(new Color(57, 152, 49));
 
-				int minRand = -20;
-				int maxRand = 20;
-				switch (random.nextInt(0,1)) {
-					case 0:
-							// grass
-//						new Color(31, 135, 23);
-						tiles[x][y].setTileColor(new Color(
-								51 + random.nextInt(minRand,maxRand-minRand),
-								205 + random.nextInt(minRand,maxRand-minRand),
-								43 + random.nextInt(minRand,maxRand-minRand)));
-						break;
-					case 1:
-							// rocks
-//						new Color(100, 100, 100);
-						tiles[x][y].setTileColor(new Color(
-								100 + random.nextInt(minRand,maxRand-minRand),
-								100 + random.nextInt(minRand,maxRand-minRand),
-								100 + random.nextInt(minRand,maxRand-minRand)));
-						break;
-					case 2:
-							// sand
-//						new Color(163, 179, 37);
-						tiles[x][y].setTileColor(new Color(
-								163 + random.nextInt(minRand,maxRand-minRand),
-								179 + random.nextInt(minRand,maxRand-minRand),
-								37 + random.nextInt(minRand,maxRand-minRand)));
-						break;
-				}
+//				int minRand = -20;
+//				int maxRand = 20;
+//				switch (random.nextInt(0,1)) {
+//					case 0:
+//							// grass
+////						new Color(31, 135, 23);
+//						tiles[x][y].setTileColor(new Color(
+//								51 + random.nextInt(minRand,maxRand-minRand),
+//								205 + random.nextInt(minRand,maxRand-minRand),
+//								43 + random.nextInt(minRand,maxRand-minRand)));
+//						break;
+//					case 1:
+//							// rocks
+////						new Color(100, 100, 100);
+//						tiles[x][y].setTileColor(new Color(
+//								100 + random.nextInt(minRand,maxRand-minRand),
+//								100 + random.nextInt(minRand,maxRand-minRand),
+//								100 + random.nextInt(minRand,maxRand-minRand)));
+//						break;
+//					case 2:
+//							// sand
+////						new Color(163, 179, 37);
+//						tiles[x][y].setTileColor(new Color(
+//								163 + random.nextInt(minRand,maxRand-minRand),
+//								179 + random.nextInt(minRand,maxRand-minRand),
+//								37 + random.nextInt(minRand,maxRand-minRand)));
+//						break;
+//				}
 			}
 		}
 		xn = random.nextInt(width/10,width - width/5 - 25);
@@ -113,7 +108,8 @@ public class GameMap {
 	}
 
 	public BufferedImage getBackgroundImage() {return backgroundImage;}
-	public BufferedImage getScentImage() {return scentImage;}
+	public BufferedImage getFoodScentImage() {return foodScentImage;}
+	public BufferedImage getAntScentImage() {return antScentImage;}
 	public BufferedImage getObjectsImage() {return objectsImage;}
 
 	public void takeObject(Object objectToTake){
@@ -134,46 +130,11 @@ public class GameMap {
 		}
 	}
 
-//	public void spreadScentValues(int value, int maxvalue) {
-//		int Tab[][];
-//		Tab = new int[width][height];
-//
-//		for(int x = 0; x < width; x++){
-//			for(int y = 0; y < height; y++){
-//
-//				if(tiles[x][y].scentValue<0) {
-//					if(Tab[x][y]>tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue+1;
-//					if(x-1>0 && tiles[x-1][y].scentValue<=0 && tiles[x-1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x-1][y]>tiles[x][y].scentValue+1 && tiles[x-1][y].cellOccupant==null) Tab[x-1][y]=tiles[x][y].scentValue+1;
-//					if(y-1>0 && tiles[x][y-1].scentValue<=0 && tiles[x][y-1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y-1]>tiles[x][y].scentValue+1 && tiles[x][y-1].cellOccupant==null) Tab[x][y-1]=tiles[x][y].scentValue+1;
-//					if(x+1<width && tiles[x+1][y].scentValue<=0 && tiles[x+1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x+1][y]>tiles[x][y].scentValue+1 && tiles[x+1][y].cellOccupant==null) Tab[x+1][y]=tiles[x][y].scentValue+1;
-//					if(y+1<height && tiles[x][y+1].scentValue<=0 && tiles[x][y+1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y+1]>tiles[x][y].scentValue+1 && tiles[x][y+1].cellOccupant==null) Tab[x][y+1]=tiles[x][y].scentValue+1;
-//				}
-//				if(tiles[x][y].scentValue>0) {
-//					if(Tab[x][y]<tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue-1;
-//					if(tiles[x][y].scentValue>1) {
-//						if (x - 1 > -1 && tiles[x - 1][y].scentValue < 1 && tiles[x - 1][y].scentValue < tiles[x][y].scentValue - 1 && Tab[x - 1][y] < tiles[x][y].scentValue - 1 && tiles[x - 1][y].cellOccupant == null)
-//							Tab[x - 1][y] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
-//						if (y - 1 > -1 && tiles[x][y - 1].scentValue < 1 && tiles[x][y - 1].scentValue < tiles[x][y].scentValue - 1 && Tab[x][y - 1] < tiles[x][y].scentValue - 1 && tiles[x][y - 1].cellOccupant == null)
-//							Tab[x][y - 1] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
-//						if (x + 1 < width && tiles[x + 1][y].scentValue < 1 && tiles[x + 1][y].scentValue < tiles[x][y].scentValue - 1 && Tab[x + 1][y] < tiles[x][y].scentValue - 1 && tiles[x + 1][y].cellOccupant == null)
-//							Tab[x + 1][y] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
-//						if (y + 1 < height && tiles[x][y + 1].scentValue < 1 && tiles[x][y + 1].scentValue < tiles[x][y].scentValue - 1 && Tab[x][y + 1] < tiles[x][y].scentValue - 1 && tiles[x][y + 1].cellOccupant == null)
-//							Tab[x][y + 1] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
-//					}
-//				}
-//			}
-//		}
-//		for(int x = 0; x < width; x++) {
-//			for (int y = 0; y < height; y++) {
-//				tiles[x][y].setScentValue(Tab[x][y]);
-//			}
-//		}
-//	}
-
 	void decreaseScentValues() {
 		for (int i=0; i<tiles.length; i++) {
 			for (int j=0; j<tiles[0].length; j++) {
-				tiles[i][j].scentValue *= EVAPORATION_RATE;
+				tiles[i][j].antScentValue *= EVAPORATION_RATE;
+				tiles[i][j].foodScentValue *= EVAPORATION_RATE;
 			}
 		}
 	}

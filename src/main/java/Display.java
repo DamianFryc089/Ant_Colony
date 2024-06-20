@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Timer;
 
 public class Display extends JPanel implements KeyListener {
 
@@ -53,7 +52,8 @@ public class Display extends JPanel implements KeyListener {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(simulation.gameMap.getBackgroundImage(), 0,0, simulation.gameMap.scale*simulation.gameMap.getWidth(), simulation.gameMap.scale*simulation.gameMap.getHeight(), null);
-		g.drawImage(simulation.gameMap.getScentImage(), 0,0, simulation.gameMap.scale*simulation.gameMap.getWidth(), simulation.gameMap.scale*simulation.gameMap.getHeight(), null);
+		g.drawImage(simulation.gameMap.getAntScentImage(), 0,0, simulation.gameMap.scale*simulation.gameMap.getWidth(), simulation.gameMap.scale*simulation.gameMap.getHeight(), null);
+		g.drawImage(simulation.gameMap.getFoodScentImage(), 0,0, simulation.gameMap.scale*simulation.gameMap.getWidth(), simulation.gameMap.scale*simulation.gameMap.getHeight(), null);
 		g.drawImage(simulation.gameMap.getObjectsImage(), 0,0, simulation.gameMap.scale*simulation.gameMap.getWidth(), simulation.gameMap.scale*simulation.gameMap.getHeight(), null);
 
 		if(stats != 0) {

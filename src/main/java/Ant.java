@@ -10,9 +10,9 @@ public class Ant extends Object{
     int dy = random.nextInt(-100, 100);
     int lastX;
     int lastY;
-    int homePher = 100;
-    int foodPher = 100;
-    private int USE_RATE = 995;
+    float homePher = 100;
+    float foodPher = 100;
+    private float USE_RATE = .995F;
     private int WANDER_CHANCE = 92;
     int bored = 0;
     Ant(int x, int y, int size, Random random, GameMap gameMap) {
@@ -60,9 +60,15 @@ public class Ant extends Object{
         }
         // Bounding limits, bounce off of edge
         if (x<2) dx = 100;
-        if (x>gameMap.getWidth()-2) dx = -100;
+        if (x>gameMap.getWidth()-3) dx = -100;
         if (y<2) dy = 100;
-        if (y>gameMap.getHeight()-2) dy = -100;
+        if (y>gameMap.getHeight()-3) dy = -100;
+
+        while(gameMap.tiles[x+dx/100][y+dy/100].cellOccupant!=null && gameMap.tiles[x+dx/100][y+dy/100].cellOccupant.getClass()!=Ant.class){
+            dx=-random.nextInt(0,2);
+            dy=-random.nextInt(0,2);
+        }
+
         // Speed limit
         dx = Math.min(dx, 100);
         dx = Math.max(dx, -100);
@@ -78,13 +84,13 @@ public class Ant extends Object{
             if (carryFood) {
                 // Leave food pheromone trail
                 foodPher = foodPher * USE_RATE;
-                gameMap.tiles[x][y].setScentValue(foodPher);
+                gameMap.tiles[x][y].setFoodScentValue(foodPher);
             }
             else
             {
                 // Leave home pheromone trail
                 homePher = homePher * USE_RATE;
-                gameMap.tiles[x][y].setScentValue(homePher);
+                gameMap.tiles[x][y].setAntScentValue(homePher);
             }
         }
 
@@ -100,49 +106,49 @@ public class Ant extends Object{
                 0, 0
         };
 
-        compare = gameMap.tiles[x-1][y-1].getScentValue(); // up left
+        compare = gameMap.tiles[x-1][y-1].getAntScentValue(); // up left
         if (compare > strongestVal) {
             strongest[0] = -1;
             strongest[1] = -1;
             strongestVal = compare;
         }
-        compare = gameMap.tiles[x][y-1].getScentValue(); // up
+        compare = gameMap.tiles[x][y-1].getAntScentValue(); // up
         if (compare > strongestVal) {
             strongest[0] = 0;
             strongest[1] = -1;
             strongestVal = compare;
         }
-        compare = gameMap.tiles[x+1][y-1].getScentValue(); // up right
+        compare = gameMap.tiles[x+1][y-1].getAntScentValue(); // up right
         if (compare > strongestVal) {
             strongest[0] = 1;
             strongest[1] = -1;
             strongestVal = compare;
         }
-        compare = gameMap.tiles[x-1][y].getScentValue(); // left
+        compare = gameMap.tiles[x-1][y].getAntScentValue(); // left
         if (compare > strongestVal) {
             strongest[0] = -1;
             strongest[1] = 0;
             strongestVal = compare;
         }
-        compare = gameMap.tiles[x+1][y].getScentValue();; // right
+        compare = gameMap.tiles[x+1][y].getAntScentValue(); // right
         if (compare > strongestVal) {
             strongest[0] = 1;
             strongest[1] = 0;
             strongestVal = compare;
         }
-        compare = gameMap.tiles[x-1][y+1].getScentValue();; // down left
+        compare = gameMap.tiles[x-1][y+1].getAntScentValue(); // down left
         if (compare > strongestVal) {
             strongest[0] = -1;
             strongest[1] = 1;
             strongestVal = compare;
         }
-        compare = gameMap.tiles[x][y+1].getScentValue();; // down
+        compare = gameMap.tiles[x][y+1].getAntScentValue(); // down
         if (compare > strongestVal) {
             strongest[0] = 0;
             strongest[1] = 1;
             strongestVal = compare;
         }
-        compare = gameMap.tiles[x+1][y+1].getScentValue();; // down right
+        compare = gameMap.tiles[x+1][y+1].getAntScentValue(); // down right
         if (compare > strongestVal) {
             strongest[0] = 1;
             strongest[1] = 1;

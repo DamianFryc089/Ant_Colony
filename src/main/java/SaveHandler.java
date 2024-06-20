@@ -21,7 +21,7 @@ public class SaveHandler {
             // zapis zapachów
         for (int i = 0; i < simulation.gameMap.getHeight(); i++) {
             for (int j = 0; j < simulation.gameMap.getWidth(); j++) {
-                content += simulation.gameMap.tiles[j][i].getScentValue() + "|";
+                content += simulation.gameMap.tiles[j][i].getAntScentValue() + "|";
             }
             content += "\n";
         }
@@ -66,7 +66,7 @@ public class SaveHandler {
 
                     // nadpisanie wartości
                 for (int j = 0; j < width; j++) {
-                    simulation.gameMap.tiles[j][i].setScentValue(scentValues[j]);
+                    simulation.gameMap.tiles[j][i].setAntScentValue(scentValues[j]);
                 }
             }
 
