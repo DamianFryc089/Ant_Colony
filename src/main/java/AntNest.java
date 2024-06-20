@@ -34,7 +34,7 @@ public class AntNest extends Object {
 				}
 			}
 			if(foodInNest > 0) {
-				int antsToSpawn = Math.floorDiv(foodInNest/2,5);
+				int antsToSpawn = (int) Math.floor((double) foodInNest /10);
 				foodInNest -= antsToSpawn * 5;
 				for (int i = 0; i < antsToSpawn; i++) {
 					spawnAnt();
