@@ -23,7 +23,7 @@ public class AntNest extends Object {
 			if (foodInNest < 0)
 			{
 				foodInNest = 0;
-				int antsToKill = Math.ceilDiv(Ant.antCounter,10);
+				int antsToKill = Math.min(Ant.antCounter/10,1);
 				for (int i = 0; i < gameMap.objects.size(); i++) {
 					if (gameMap.objects.get(i).getClass() == Ant.class) {
 						gameMap.objects.get(i).death();
