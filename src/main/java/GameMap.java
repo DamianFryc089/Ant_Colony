@@ -10,9 +10,8 @@ public class GameMap {
 	Random random;
 	ArrayList<Object> objects;
 	public final int scale;
-	int xn, yn, foodCooldown = 100000, foodTimer = 0;
-	private final float MAX_VAL = 100;
-	private float EVAPORATION_RATE = .999F;
+	int xn, yn, foodCooldown = 10000, foodTimer = 0;
+    private float scentFading = 0.9995F;
 
 	GameMap(Random random, ArrayList<Object> objects, int scale) {
 		this.random = random;
@@ -35,16 +34,15 @@ public class GameMap {
 		}
 		void setTileColor(Color newTileColor) {tileColor = newTileColor;}
 		float getAntScentValue() {return antScentValue;}
+		float getFoodScentValue() {return foodScentValue;}
 		void setAntScentValue(float value)
 		{
-			if(value>255)value=255;
-			if(value<0)value=0;
-			antScentValue = value;
+			antScentValue = Math.max(antScentValue, value);
 			antScentImage.setRGB(x, y,	new Color(255, 0, 0, Math.min((int)(antScentValue*2.55),255)).getRGB());
 		}
 		void setFoodScentValue(float value)
 		{
-			foodScentValue = value;
+			foodScentValue = Math.max(foodScentValue, value);
 			foodScentImage.setRGB(x, y,	new Color(0, 0, 255, Math.min((int)(foodScentValue*2.55),255)).getRGB());
 		}
 	}
@@ -75,7 +73,7 @@ public class GameMap {
 		xn = random.nextInt(width/10,width - width/5 - 25);
 		yn = random.nextInt(height/10,height - height/5 - 25);
 		generateImage();
-		new AntNest(xn, yn,25, random, this);
+		new AntNest(xn, yn,25, random, this, 0);
 		generateWalls(300);
 	}
 
@@ -113,8 +111,20 @@ public class GameMap {
 	void decreaseScentValues() {
 		for (int i=0; i<tiles.length; i++) {
 			for (int j=0; j<tiles[0].length; j++) {
-				tiles[i][j].antScentValue *= EVAPORATION_RATE;
-				tiles[i][j].foodScentValue *= EVAPORATION_RATE;
+
+				tiles[i][j].antScentValue *= scentFading;
+				if (tiles[i][j].antScentValue > 5)
+					antScentImage.setRGB(i, j,	new Color(255, 0, 0, Math.min((int)(tiles[i][j].antScentValue*2.55),255)).getRGB());
+
+				if(tiles[i][j].antScentValue < 5)
+					tiles[i][j].antScentValue = 0;
+
+				tiles[i][j].foodScentValue *= scentFading;
+				if (tiles[i][j].foodScentValue > 5)
+					foodScentImage.setRGB(i, j,	new Color(0, 0, 255, Math.min((int)(tiles[i][j].foodScentValue*2.55),255)).getRGB());
+
+				if(tiles[i][j].foodScentValue < 5)
+						tiles[i][j].foodScentValue = 0;
 			}
 		}
 	}
@@ -172,6 +182,5 @@ public class GameMap {
 
 	public int getWidth(){return width;}
 	public int getHeight(){return height;}
-	public int getNestx(){return xn+12;}
-	public int getNesty(){return yn+12;}
+
 }

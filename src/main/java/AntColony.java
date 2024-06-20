@@ -10,7 +10,7 @@ public class AntColony{
     private final Display display;
     public final GameMap gameMap;
     float targetFPS = 60;
-    final int scale = 4;
+    final int scale = 3;
     long tick = 0;
     boolean isPaused = false;
     private Timer timer;
@@ -41,9 +41,6 @@ public class AntColony{
             if (--gameMap.foodTimer <= 0) {
                 gameMap.foodTimer = gameMap.foodCooldown;
                 gameMap.generateFoodField(20);
-            }
-            if(tick % 3 == 0) {
-//                gameMap.spreadScentValues(1, 255);//rozprzestrzenianie się zapachu na sąsiednie pola
             }
             gameMap.decreaseScentValues();
             for (int i = 0; i < objects.size(); i++) objects.get(i).action();

@@ -96,16 +96,17 @@ public class Display extends JPanel implements KeyListener {
 			System.out.println(stats);
 		}
 
-		if (e.getKeyChar() == 's') {
-			simulation.isPaused = true;
-            SaveHandler.save(simulation);
-			simulation.isPaused = false;
-		}
-		if (e.getKeyChar() == 'l') {
-			simulation.isPaused = true;
-			SaveHandler.load(simulation);
-			repaint();
-		}
+		// nie działa na nowej wersji
+//		if (e.getKeyChar() == 's') {
+//			simulation.isPaused = true;
+//            SaveHandler.save(simulation);
+//			simulation.isPaused = false;
+//		}
+//		if (e.getKeyChar() == 'l') {
+//			simulation.isPaused = true;
+//			SaveHandler.load(simulation);
+//			repaint();
+//		}
 
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			simulation.targetFPS = Math.min(1000, simulation.targetFPS*11/10);

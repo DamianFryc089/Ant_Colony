@@ -59,9 +59,9 @@ public class SaveHandler {
                     // sczytanie z wiersza wartości
                 String row = reader.readLine();
                 String[] scentValuesS = row.split("\\|");
-                int[] scentValues = new int[scentValuesS.length];
+                float[] scentValues = new float[scentValuesS.length];
                 for (int j = 0; j < scentValuesS.length; j++) {
-                    scentValues[j] = Integer.parseInt(scentValuesS[j]);
+                    scentValues[j] = Float.parseFloat(scentValuesS[j]);
                 }
 
                     // nadpisanie wartości
@@ -89,8 +89,8 @@ public class SaveHandler {
                                 simulation.random,
                                 simulation.gameMap,
                                 Boolean.parseBoolean(objectInfo[4]),
-                                Integer.parseInt(objectInfo[5]),
-                                Integer.parseInt(objectInfo[6])
+                                Float.parseFloat(objectInfo[5]),
+                                Float.parseFloat(objectInfo[6])
                         );
                         break;
                     case "class AntNest":
@@ -99,7 +99,8 @@ public class SaveHandler {
                                 Integer.parseInt(objectInfo[2]),
                                 Integer.parseInt(objectInfo[3]),
                                 simulation.random,
-                                simulation.gameMap
+                                simulation.gameMap,
+                                Integer.parseInt(objectInfo[4])
                         );
                         break;
                     case "class Wall":

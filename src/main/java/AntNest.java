@@ -3,13 +3,14 @@ import java.util.Random;
 
 public class AntNest extends Object {
 	public static int foodInNest = 10;
-	private int ticksSinceFoodCheck = 0;
-	AntNest(int x, int y, int size, Random random, GameMap gameMap)
+	private int ticksSinceFoodCheck;
+	AntNest(int x, int y, int size, Random random, GameMap gameMap, int ticksSinceFoodCheck)
 	{
 		super(x, y, size, random, gameMap);
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 75; i++) {
 			spawnAnt();
 		}
+		this.ticksSinceFoodCheck = ticksSinceFoodCheck;
 	}
 
 	@Override
@@ -18,21 +19,27 @@ public class AntNest extends Object {
 		if (ticksSinceFoodCheck >= 2000)
 		{
 			ticksSinceFoodCheck = 0;
-			foodInNest -= Ant.antCounter * 1;
+			foodInNest -= Ant.antCounter;
 			if (foodInNest < 0)
 			{
 				foodInNest = 0;
+				int antsToKill = Math.ceilDiv(Ant.antCounter,10);
 				for (int i = 0; i < gameMap.objects.size(); i++) {
 					if (gameMap.objects.get(i).getClass() == Ant.class) {
-							// mrówka która nosi jedzenie nie umiera
-//						if (((Ant) gameMap.objects.get(i)).carryFood)
-//							continue;
 						gameMap.objects.get(i).death();
-						break;
+						antsToKill--;
+						if (antsToKill == 0)
+							break;
 					}
 				}
 			}
-			if(foodInNest>0)spawnAnt();
+			if(foodInNest > 0) {
+				int antsToSpawn = Math.floorDiv(foodInNest/2,5);
+				foodInNest -= antsToSpawn * 5;
+				for (int i = 0; i < antsToSpawn; i++) {
+					spawnAnt();
+				}
+			}
 		}
 	}
 
@@ -92,33 +99,13 @@ public class AntNest extends Object {
 		}while (startY != newY || startX != newX);
 	}
 
-	private void generateScent() {
-//		int maxGeneratedScent = -100;
-//			// Generowanie z gory
-//		for (int i = 0; i < size+2; i++) {
-//			gameMap.tiles[x+i][y-1].setScentValue(Math.min(gameMap.tiles[x+i][y-1].getScentValue(), maxGeneratedScent));
-//		}
-//			// Generowanie z prawej
-//		for (int i = 0; i < size+2; i++) {
-//			gameMap.tiles[x+size+1][i+y].setScentValue(Math.min(gameMap.tiles[x+size+1][i+y].getScentValue(), maxGeneratedScent));
-//		}
-//
-//			// Generowanie z dołu
-//		for (int i = 0; i < size+2; i++) {
-//			gameMap.tiles[x+i][y+size+1].setScentValue(Math.min(gameMap.tiles[x+i][y+size+1].getScentValue(), maxGeneratedScent));
-//		}
-//
-//			// Generowanie z lewej
-//		for (int i = 0; i < size+2; i++) {
-//			gameMap.tiles[x-1][i+y].setScentValue(Math.min(gameMap.tiles[x-1][i+y].getScentValue(), maxGeneratedScent));
-//		}
-	}
 	@Override
 	public Color getColor() {return new Color(119, 52, 29);}
 
 	@Override
 	public String toString() {
 		return super.toString() +
-				"|" + foodInNest;
+				"|" + foodInNest+
+				"|" + ticksSinceFoodCheck;
 	}
 }
