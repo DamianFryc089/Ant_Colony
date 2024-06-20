@@ -27,7 +27,7 @@ public class AntNest extends Object {
 							// mrówka która nosi jedzenie nie umiera
 //						if (((Ant) gameMap.objects.get(i)).carryFood)
 //							continue;
-						//gameMap.objects.get(i).death();
+						gameMap.objects.get(i).death();
 						break;
 					}
 				}

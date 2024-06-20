@@ -9,7 +9,7 @@ public class GameMap {
 	private BufferedImage backgroundImage, scentImage, objectsImage;
 	Random random;
 	ArrayList<Object> objects;
-	private final int scale;
+	public final int scale;
 	int xn, yn, foodCooldown = 100000, foodTimer = 0;
 	GameMap(Random random, ArrayList<Object> objects, int scale) {
 		this.random = random;
@@ -109,26 +109,9 @@ public class GameMap {
 		}
 	}
 
-	public BufferedImage getBackgroundImage() {return scaleImage(backgroundImage);}
-	public BufferedImage getScentImage() {return scaleImage(scentImage);}
-	public BufferedImage getObjectsImage() {
-		return scaleImage(objectsImage);
-	}
-
-	private BufferedImage scaleImage(BufferedImage imageToScale) {
-		if (scale == 1) return imageToScale;
-		BufferedImage scaledImage = new BufferedImage(imageToScale.getWidth()*scale, imageToScale.getHeight()*scale, BufferedImage.TYPE_INT_ARGB);
-		for (int x = 0; x < imageToScale.getWidth(); x++) {
-			for (int y = 0; y < imageToScale.getHeight(); y++) {
-				for (int i = 0; i < scale; i++) {
-					for (int j = 0; j < scale; j++) {
-						scaledImage.setRGB(x*scale+i, y*scale+j, imageToScale.getRGB(x,y));
-					}
-				}
-			}
-		}
-		return scaledImage;
-	}
+	public BufferedImage getBackgroundImage() {return backgroundImage;}
+	public BufferedImage getScentImage() {return scentImage;}
+	public BufferedImage getObjectsImage() {return objectsImage;}
 
 	public void takeObject(Object objectToTake){
 		for(int x = 0; x < objectToTake.getSize(); x++){

@@ -20,7 +20,7 @@ public class Display extends JPanel implements KeyListener {
 		frame.setResizable(false);
 
 			// Znalezienie wartości wymiarów okna z argumentów
-		int[] size = {1000, 600};
+		int[] size = {0, 0};
 		if (args.length == 2 ) {
 			try{
 				size[0] = Integer.parseInt(args[0]);
@@ -28,7 +28,7 @@ public class Display extends JPanel implements KeyListener {
 			} catch (NumberFormatException ignored) {}
 		}
 
-		if(true){//size[0] > 250 && size[1] > 250) {
+		if(size[0] > 250 && size[1] > 250) {
 			// Okno w trybie okienkowym
 			frame.setSize(new Dimension(size[0] + 16, size[1] + 39));
 			frame.setVisible(true);
@@ -52,9 +52,9 @@ public class Display extends JPanel implements KeyListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(simulation.gameMap.getBackgroundImage(), 0, 0, null);
-		g.drawImage(simulation.gameMap.getScentImage(),0,0, null);
-		g.drawImage(simulation.gameMap.getObjectsImage(),0,0,null);
+		g.drawImage(simulation.gameMap.getBackgroundImage(), 0,0, simulation.gameMap.scale*simulation.gameMap.getWidth(), simulation.gameMap.scale*simulation.gameMap.getHeight(), null);
+		g.drawImage(simulation.gameMap.getScentImage(), 0,0, simulation.gameMap.scale*simulation.gameMap.getWidth(), simulation.gameMap.scale*simulation.gameMap.getHeight(), null);
+		g.drawImage(simulation.gameMap.getObjectsImage(), 0,0, simulation.gameMap.scale*simulation.gameMap.getWidth(), simulation.gameMap.scale*simulation.gameMap.getHeight(), null);
 
 		if(stats != 0) {
 			if(stats != 2)
@@ -72,9 +72,9 @@ public class Display extends JPanel implements KeyListener {
 			// Rysowanie liczby pozostałego jedzenia na planszy
 			g.drawChars(("Food left: " + Food.foodCounter).toCharArray(), 0, ("Food left: " + Food.foodCounter).length(), 10, 60);
 			// Rysowanie liczby tików pomiędzy pojawieniami się jedzenia
-			g.drawChars(("Food every: " + simulation.gameMap.foodCooldown).toCharArray(), 0, ("Food every: " + simulation.gameMap.foodCooldown).length(), 10, 60);
+			g.drawChars(("Food every: " + simulation.gameMap.foodCooldown).toCharArray(), 0, ("Food every: " + simulation.gameMap.foodCooldown).length(), 10, 75);
 			// Rysowanie liczby tików do pojawienia się jedzenia
-			g.drawChars(("New food in: " + simulation.gameMap.foodTimer).toCharArray(), 0, ("New food in: " + simulation.gameMap.foodTimer).length(), 10, 75);
+			g.drawChars(("New food in: " + simulation.gameMap.foodTimer).toCharArray(), 0, ("New food in: " + simulation.gameMap.foodTimer).length(), 10, 90);
 			// Rysowanie liczby fps
 			g.drawChars(("FPS: " + (int) simulation.targetFPS).toCharArray(), 0, ("FPS: " + (int) simulation.targetFPS).length(), getWidth() - 32 - 7 * ("" + (int) simulation.targetFPS).length(), 10);
 		}
