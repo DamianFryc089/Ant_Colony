@@ -18,7 +18,7 @@ public class AntColony{
     public AntColony(String[] args) {
         random = new Random();
 //        seed = random.nextInt();
-        seed = 5;
+        seed = 2;
         random.setSeed(seed);
 
         objects = new ArrayList<>();

@@ -67,8 +67,10 @@ public class Display extends JPanel implements KeyListener {
 			}
 			// Rysowanie liczby mrówek
 			g.drawChars(("Ants: " + Ant.antCounter).toCharArray(), 0, ("Ants: " + Ant.antCounter).length(), 10, 30);
+			// Rysowanie liczby jedzenia w mrowisku
+			g.drawChars(("Food: " + AntNest.foodInNest).toCharArray(), 0, ("Food: " + AntNest.foodInNest).length(), 10, 45);
 			// Rysowanie liczby pozostałego jedzenia na planszy
-			g.drawChars(("Food left: " + Food.foodCounter).toCharArray(), 0, ("Food left: " + Food.foodCounter).length(), 10, 45);
+			g.drawChars(("Food left: " + Food.foodCounter).toCharArray(), 0, ("Food left: " + Food.foodCounter).length(), 10, 60);
 			// Rysowanie liczby tików pomiędzy pojawieniami się jedzenia
 			g.drawChars(("Food every: " + simulation.gameMap.foodCooldown).toCharArray(), 0, ("Food every: " + simulation.gameMap.foodCooldown).length(), 10, 60);
 			// Rysowanie liczby tików do pojawienia się jedzenia

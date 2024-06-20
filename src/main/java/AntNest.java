@@ -7,7 +7,7 @@ public class AntNest extends Object {
 	AntNest(int x, int y, int size, Random random, GameMap gameMap)
 	{
 		super(x, y, size, random, gameMap);
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 			spawnAnt();
 		}
 	}
@@ -15,11 +15,11 @@ public class AntNest extends Object {
 	@Override
 	void action() {
 		ticksSinceFoodCheck++;
-		if (ticksSinceFoodCheck >= 250)
+		if (ticksSinceFoodCheck >= 2000)
 		{
 			ticksSinceFoodCheck = 0;
 			foodInNest -= Ant.antCounter * 1;
-			if (foodInNest <= 0)
+			if (foodInNest < 0)
 			{
 				foodInNest = 0;
 				for (int i = 0; i < gameMap.objects.size(); i++) {
@@ -27,13 +27,12 @@ public class AntNest extends Object {
 							// mrówka która nosi jedzenie nie umiera
 //						if (((Ant) gameMap.objects.get(i)).carryFood)
 //							continue;
-						gameMap.objects.get(i).death();
+						//gameMap.objects.get(i).death();
 						break;
 					}
 				}
 			}
-			else
-				spawnAnt();
+			if(foodInNest>0)spawnAnt();
 		}
 	}
 

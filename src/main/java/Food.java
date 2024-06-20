@@ -11,7 +11,7 @@ public class Food extends Object{
 	}
 	@Override
 	void action(){
-		//gameMap.tiles[x][y].setScentValue(100);
+		//gameMap.tiles[x][y].setScentValue(2);
 	}
 	Food(int x, int y, int size, Random random, GameMap gameMap, int foodValue) {
 		super(x, y, size, random, gameMap);
