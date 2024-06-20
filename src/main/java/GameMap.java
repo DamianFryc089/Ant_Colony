@@ -37,6 +37,8 @@ public class GameMap {
 		float getAntScentValue() {return antScentValue;}
 		void setAntScentValue(float value)
 		{
+			if(value>255)value=255;
+			if(value<0)value=0;
 			antScentValue = value;
 			antScentImage.setRGB(x, y,	new Color(255, 0, 0, Math.min((int)(antScentValue*2.55),255)).getRGB());
 		}
@@ -62,34 +64,12 @@ public class GameMap {
 				tiles[x][y].setTileColor(new Color(255, 255, 255));
 //				tiles[x][y].setTileColor(new Color(57, 152, 49));
 
-//				int minRand = -20;
-//				int maxRand = 20;
-//				switch (random.nextInt(0,1)) {
-//					case 0:
-//							// grass
-////						new Color(31, 135, 23);
-//						tiles[x][y].setTileColor(new Color(
-//								51 + random.nextInt(minRand,maxRand-minRand),
-//								205 + random.nextInt(minRand,maxRand-minRand),
-//								43 + random.nextInt(minRand,maxRand-minRand)));
-//						break;
-//					case 1:
-//							// rocks
-////						new Color(100, 100, 100);
-//						tiles[x][y].setTileColor(new Color(
-//								100 + random.nextInt(minRand,maxRand-minRand),
-//								100 + random.nextInt(minRand,maxRand-minRand),
-//								100 + random.nextInt(minRand,maxRand-minRand)));
-//						break;
-//					case 2:
-//							// sand
-////						new Color(163, 179, 37);
-//						tiles[x][y].setTileColor(new Color(
-//								163 + random.nextInt(minRand,maxRand-minRand),
-//								179 + random.nextInt(minRand,maxRand-minRand),
-//								37 + random.nextInt(minRand,maxRand-minRand)));
-//						break;
-//				}
+				int minRand = -20;
+				int maxRand = 20;
+				tiles[x][y].setTileColor(new Color(
+				51 + random.nextInt(minRand,maxRand-minRand),
+				205 + random.nextInt(minRand,maxRand-minRand),
+				43 + random.nextInt(minRand,maxRand-minRand)));
 			}
 		}
 		xn = random.nextInt(width/10,width - width/5 - 25);
