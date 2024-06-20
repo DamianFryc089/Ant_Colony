@@ -11,6 +11,9 @@ public class GameMap {
 	ArrayList<Object> objects;
 	public final int scale;
 	int xn, yn, foodCooldown = 100000, foodTimer = 0;
+	private final float MAX_VAL = 100;
+	private float EVAPORATION_RATE = .999F;
+
 	GameMap(Random random, ArrayList<Object> objects, int scale) {
 		this.random = random;
 		this.objects = objects;
@@ -19,18 +22,18 @@ public class GameMap {
 
 	public class Tile{
 		private final int x, y;
-		private int scentValue;
+		private float scentValue;
 		public Object cellOccupant;
 		Color tileColor;
 
 		Tile(int x, int y) {
 			this.x = x;
 			this.y = y;
-			scentValue = 0;
+			scentValue = 0.0F;
 			cellOccupant = null;
 		}
 		void setTileColor(Color newTileColor) {tileColor = newTileColor;}
-		int getScentValue() {return scentValue;}
+		float getScentValue() {return scentValue;}
 		void increaseScentValue(int value) {
 			scentValue+=value;
 			if(scentValue>255) scentValue=255;
@@ -130,45 +133,50 @@ public class GameMap {
 			}
 		}
 	}
-	public void spreadScentValues(int value, int maxvalue) {
-		int Tab[][];
-		Tab = new int[width][height];
 
-		for(int x = 0; x < width; x++){
-			for(int y = 0; y < height; y++){
+//	public void spreadScentValues(int value, int maxvalue) {
+//		int Tab[][];
+//		Tab = new int[width][height];
+//
+//		for(int x = 0; x < width; x++){
+//			for(int y = 0; y < height; y++){
+//
+//				if(tiles[x][y].scentValue<0) {
+//					if(Tab[x][y]>tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue+1;
+//					if(x-1>0 && tiles[x-1][y].scentValue<=0 && tiles[x-1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x-1][y]>tiles[x][y].scentValue+1 && tiles[x-1][y].cellOccupant==null) Tab[x-1][y]=tiles[x][y].scentValue+1;
+//					if(y-1>0 && tiles[x][y-1].scentValue<=0 && tiles[x][y-1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y-1]>tiles[x][y].scentValue+1 && tiles[x][y-1].cellOccupant==null) Tab[x][y-1]=tiles[x][y].scentValue+1;
+//					if(x+1<width && tiles[x+1][y].scentValue<=0 && tiles[x+1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x+1][y]>tiles[x][y].scentValue+1 && tiles[x+1][y].cellOccupant==null) Tab[x+1][y]=tiles[x][y].scentValue+1;
+//					if(y+1<height && tiles[x][y+1].scentValue<=0 && tiles[x][y+1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y+1]>tiles[x][y].scentValue+1 && tiles[x][y+1].cellOccupant==null) Tab[x][y+1]=tiles[x][y].scentValue+1;
+//				}
+//				if(tiles[x][y].scentValue>0) {
+//					if(Tab[x][y]<tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue-1;
+//					if(tiles[x][y].scentValue>1) {
+//						if (x - 1 > -1 && tiles[x - 1][y].scentValue < 1 && tiles[x - 1][y].scentValue < tiles[x][y].scentValue - 1 && Tab[x - 1][y] < tiles[x][y].scentValue - 1 && tiles[x - 1][y].cellOccupant == null)
+//							Tab[x - 1][y] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
+//						if (y - 1 > -1 && tiles[x][y - 1].scentValue < 1 && tiles[x][y - 1].scentValue < tiles[x][y].scentValue - 1 && Tab[x][y - 1] < tiles[x][y].scentValue - 1 && tiles[x][y - 1].cellOccupant == null)
+//							Tab[x][y - 1] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
+//						if (x + 1 < width && tiles[x + 1][y].scentValue < 1 && tiles[x + 1][y].scentValue < tiles[x][y].scentValue - 1 && Tab[x + 1][y] < tiles[x][y].scentValue - 1 && tiles[x + 1][y].cellOccupant == null)
+//							Tab[x + 1][y] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
+//						if (y + 1 < height && tiles[x][y + 1].scentValue < 1 && tiles[x][y + 1].scentValue < tiles[x][y].scentValue - 1 && Tab[x][y + 1] < tiles[x][y].scentValue - 1 && tiles[x][y + 1].cellOccupant == null)
+//							Tab[x][y + 1] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
+//					}
+//				}
+//			}
+//		}
+//		for(int x = 0; x < width; x++) {
+//			for (int y = 0; y < height; y++) {
+//				tiles[x][y].setScentValue(Tab[x][y]);
+//			}
+//		}
+//	}
 
-				if(tiles[x][y].scentValue<0) {
-					if(Tab[x][y]>tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue+1;
-					if(x-1>0 && tiles[x-1][y].scentValue<=0 && tiles[x-1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x-1][y]>tiles[x][y].scentValue+1 && tiles[x-1][y].cellOccupant==null) Tab[x-1][y]=tiles[x][y].scentValue+1;
-					if(y-1>0 && tiles[x][y-1].scentValue<=0 && tiles[x][y-1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y-1]>tiles[x][y].scentValue+1 && tiles[x][y-1].cellOccupant==null) Tab[x][y-1]=tiles[x][y].scentValue+1;
-					if(x+1<width && tiles[x+1][y].scentValue<=0 && tiles[x+1][y].scentValue>tiles[x][y].scentValue+1 && Tab[x+1][y]>tiles[x][y].scentValue+1 && tiles[x+1][y].cellOccupant==null) Tab[x+1][y]=tiles[x][y].scentValue+1;
-					if(y+1<height && tiles[x][y+1].scentValue<=0 && tiles[x][y+1].scentValue>tiles[x][y].scentValue+1 && Tab[x][y+1]>tiles[x][y].scentValue+1 && tiles[x][y+1].cellOccupant==null) Tab[x][y+1]=tiles[x][y].scentValue+1;
-				}
-				if(tiles[x][y].scentValue>0) {
-					if(Tab[x][y]<tiles[x][y].scentValue)Tab[x][y]=tiles[x][y].scentValue-1;
-					if(tiles[x][y].scentValue>1) {
-						if (x - 1 > -1 && tiles[x - 1][y].scentValue < 1 && tiles[x - 1][y].scentValue < tiles[x][y].scentValue - 1 && Tab[x - 1][y] < tiles[x][y].scentValue - 1 && tiles[x - 1][y].cellOccupant == null)
-							Tab[x - 1][y] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
-						if (y - 1 > -1 && tiles[x][y - 1].scentValue < 1 && tiles[x][y - 1].scentValue < tiles[x][y].scentValue - 1 && Tab[x][y - 1] < tiles[x][y].scentValue - 1 && tiles[x][y - 1].cellOccupant == null)
-							Tab[x][y - 1] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
-						if (x + 1 < width && tiles[x + 1][y].scentValue < 1 && tiles[x + 1][y].scentValue < tiles[x][y].scentValue - 1 && Tab[x + 1][y] < tiles[x][y].scentValue - 1 && tiles[x + 1][y].cellOccupant == null)
-							Tab[x + 1][y] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
-						if (y + 1 < height && tiles[x][y + 1].scentValue < 1 && tiles[x][y + 1].scentValue < tiles[x][y].scentValue - 1 && Tab[x][y + 1] < tiles[x][y].scentValue - 1 && tiles[x][y + 1].cellOccupant == null)
-							Tab[x][y + 1] = (tiles[x][y].scentValue-(tiles[x][y].scentValue%100))/100;
-					}
-				}
+	void decreaseScentValues() {
+		for (int i=0; i<tiles.length; i++) {
+			for (int j=0; j<tiles[0].length; j++) {
+				tiles[i][j].scentValue *= EVAPORATION_RATE;
 			}
 		}
-		for(int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				tiles[x][y].setScentValue(Tab[x][y]);
-			}
-		}
-
-
 	}
-
-
 
 	private void generateWalls(int count){
 		while (count > 0) {

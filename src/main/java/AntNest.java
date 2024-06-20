@@ -93,25 +93,25 @@ public class AntNest extends Object {
 	}
 
 	private void generateScent() {
-		int maxGeneratedScent = -100;
-			// Generowanie z gory
-		for (int i = 0; i < size+2; i++) {
-			gameMap.tiles[x+i][y-1].setScentValue(Math.min(gameMap.tiles[x+i][y-1].getScentValue(), maxGeneratedScent));
-		}
-			// Generowanie z prawej
-		for (int i = 0; i < size+2; i++) {
-			gameMap.tiles[x+size+1][i+y].setScentValue(Math.min(gameMap.tiles[x+size+1][i+y].getScentValue(), maxGeneratedScent));
-		}
-
-			// Generowanie z dołu
-		for (int i = 0; i < size+2; i++) {
-			gameMap.tiles[x+i][y+size+1].setScentValue(Math.min(gameMap.tiles[x+i][y+size+1].getScentValue(), maxGeneratedScent));
-		}
-
-			// Generowanie z lewej
-		for (int i = 0; i < size+2; i++) {
-			gameMap.tiles[x-1][i+y].setScentValue(Math.min(gameMap.tiles[x-1][i+y].getScentValue(), maxGeneratedScent));
-		}
+//		int maxGeneratedScent = -100;
+//			// Generowanie z gory
+//		for (int i = 0; i < size+2; i++) {
+//			gameMap.tiles[x+i][y-1].setScentValue(Math.min(gameMap.tiles[x+i][y-1].getScentValue(), maxGeneratedScent));
+//		}
+//			// Generowanie z prawej
+//		for (int i = 0; i < size+2; i++) {
+//			gameMap.tiles[x+size+1][i+y].setScentValue(Math.min(gameMap.tiles[x+size+1][i+y].getScentValue(), maxGeneratedScent));
+//		}
+//
+//			// Generowanie z dołu
+//		for (int i = 0; i < size+2; i++) {
+//			gameMap.tiles[x+i][y+size+1].setScentValue(Math.min(gameMap.tiles[x+i][y+size+1].getScentValue(), maxGeneratedScent));
+//		}
+//
+//			// Generowanie z lewej
+//		for (int i = 0; i < size+2; i++) {
+//			gameMap.tiles[x-1][i+y].setScentValue(Math.min(gameMap.tiles[x-1][i+y].getScentValue(), maxGeneratedScent));
+//		}
 	}
 	@Override
 	public Color getColor() {return new Color(119, 52, 29);}

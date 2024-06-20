@@ -10,15 +10,15 @@ public class AntColony{
     private final Display display;
     public final GameMap gameMap;
     float targetFPS = 60;
-    final int scale = 2;
+    final int scale = 4;
     long tick = 0;
     boolean isPaused = false;
     private Timer timer;
 
     public AntColony(String[] args) {
         random = new Random();
-//        seed = random.nextInt();
-        seed = 2;
+        seed = random.nextInt();
+//        seed = 2;
         random.setSeed(seed);
 
         objects = new ArrayList<>();
@@ -43,8 +43,9 @@ public class AntColony{
                 gameMap.generateFoodField(20);
             }
             if(tick % 3 == 0) {
-                gameMap.spreadScentValues(1, 255);//rozprzestrzenianie się zapachu na sąsiednie pola
+//                gameMap.spreadScentValues(1, 255);//rozprzestrzenianie się zapachu na sąsiednie pola
             }
+            gameMap.decreaseScentValues();
             for (int i = 0; i < objects.size(); i++) objects.get(i).action();
             display.repaint();
             tick++;
