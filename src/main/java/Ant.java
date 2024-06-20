@@ -4,7 +4,8 @@ import java.util.Random;
 public class Ant extends Object{
     static int antCounter = 0;
     public boolean carryFood = false;
-    private int k, f=0; //kierunek w krórym idzie mrówka(NIE DOTYKAĆ!!!)
+    private int k, f=0;//kierunek w krórym idzie mrówka(NIE DOTYKAĆ!!!)
+    long t=0;
     private int a=50; // 2/a szansa na to że mrówka losowo zmieni kierunek(tylko w tedy gdy mrówka nie wyczuwa zapachu)
     Ant(int x, int y, int size, Random random, GameMap gameMap) {
         super(x, y, size, random, gameMap);
@@ -31,10 +32,12 @@ public class Ant extends Object{
         if(y+1<gameMap.getHeight() && (gameMap.tiles[x][y+1].cellOccupant == null || gameMap.tiles[x][y+1].cellOccupant.getClass() == Ant.class)){tab[2]=gameMap.tiles[x][y+1].getScentValue();}
         if(y-1>0 && (gameMap.tiles[x][y-1].cellOccupant == null || gameMap.tiles[x][y-1].cellOccupant.getClass() == Ant.class)){tab[3]=gameMap.tiles[x][y-1].getScentValue();}
         if(carryFood){
+            t++;
             gameMap.tiles[x][y].setScentValue(250);
             for(int i=0; i<4;i++){
-                if(tab[i]!=-256&&tab[i]<2)tab[i]=0;
-                if(tab[i]>50)tab[i]=50;
+                if(tab[i]!=-256&&tab[i]<10)tab[i]=0;
+                //if(tab[i]>150)tab[i]=250;
+                if(tab[i]!=256 && t>500)tab[i]=0;
             }
         }
         else {
@@ -47,28 +50,28 @@ public class Ant extends Object{
         {
             case 0:
                 z=logika(tab[0], tab[3], tab[2]);
-                if(z==3){k=1;}
+                if(z==3){k=1;x-=1;}
                 if(z==0){x+=1;}
                 if(z==1){y-=1;k=3;f++;}
                 if(z==2){y+=1;k=2;f--;}
                 break;
             case 1:
                 z=logika(tab[1], tab[2], tab[3]);
-                if(z==3){k=0;}
+                if(z==3){k=0;x+=1;}
                 if(z==0){x-=1;}
                 if(z==1){y+=1;k=2;f++;}
                 if(z==2){y-=1;k=3;f--;}
                 break;
             case 2:
                 z=logika(tab[2], tab[0], tab[1]);
-                if(z==3){k=3;}
+                if(z==3){k=3;y-=1;}
                 if(z==0){y+=1;}
                 if(z==1){x+=1;k=0;f++;}
                 if(z==2){x-=1;k=1;f--;}
                 break;
             case 3:
                 z=logika(tab[3], tab[1], tab[0]);
-                if(z==3){k=2;}
+                if(z==3){k=2;y+=1;}
                 if(z==0){y-=1;}
                 if(z==1){x-=1;k=1;f++;}
                 if(z==2){x+=1;k=0;f--;}
@@ -84,19 +87,25 @@ public class Ant extends Object{
             if(carryFood) {
                 carryFood = false;
                 AntNest.foodInNest++;
+                t=0;
             }
             else{
+                gameMap.tiles[x][y].setScentValue(250);
                 carryFood=true;}
             return 3;}
         if( s==-256 && r==-256 && l==-256)return 3;//s-prosto r-prawo l-lewo
-        if(f>5){
-            if(l!=-256){f=0;return 2;}
-            if(s!=-256){f=0;return 0;}
+        if(f>4){
+            r=-255;
+            f=0;
+//            if(l!=-256){f=0;return 2;}
+//            if(s!=-256){f=0;return 0;}
 
         }
-        if(f<-5){
-            if(r!=-256){f=0;return 1;}
-            if(s!=-256){f=0;return 0;}
+        if(f<-4){
+            l=-255;
+            f=0;
+//            if(r!=-256){f=0;return 1;}
+//            if(s!=-256){f=0;return 0;}
 
         }
         if( s > r && s > l ) return 0;
