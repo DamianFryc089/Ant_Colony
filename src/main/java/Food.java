@@ -10,9 +10,7 @@ public class Food extends Object{
 		foodCounter+=foodValue;
 	}
 	@Override
-	void action(){
-		//gameMap.tiles[x][y].setScentValue(2);
-	}
+	void action(){}
 	Food(int x, int y, int size, Random random, GameMap gameMap, int foodValue) {
 		super(x, y, size, random, gameMap);
 		this.foodValue = foodValue;

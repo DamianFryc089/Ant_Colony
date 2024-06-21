@@ -6,10 +6,10 @@ import java.awt.event.KeyListener;
 public class Display extends JPanel implements KeyListener {
 
 	private final AntColony simulation;
-	private int stats = 2;
+	private int stats = 1;
 	private final long simulationStartTime = System.currentTimeMillis();
 
-	Display(String[] args, AntColony simulation)
+	Display(int[] simulationArgs, AntColony simulation)
 	{
 		this.simulation = simulation;
 
@@ -18,18 +18,9 @@ public class Display extends JPanel implements KeyListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 
-			// Znalezienie wartości wymiarów okna z argumentów
-		int[] size = {0, 0};
-		if (args.length == 2 ) {
-			try{
-				size[0] = Integer.parseInt(args[0]);
-				size[1] = Integer.parseInt(args[1]);
-			} catch (NumberFormatException ignored) {}
-		}
-
-		if(size[0] > 250 && size[1] > 250) {
+		if(simulationArgs[0] > 250 && simulationArgs[1] > 250) {
 			// Okno w trybie okienkowym
-			frame.setSize(new Dimension(size[0] + 16, size[1] + 39));
+			frame.setSize(new Dimension(simulationArgs[0] + 16, simulationArgs[1] + 39));
 			frame.setVisible(true);
 			frame.getContentPane().add(this);
 			frame.setVisible(true);
@@ -57,14 +48,16 @@ public class Display extends JPanel implements KeyListener {
 		g.drawImage(simulation.gameMap.getObjectsImage(), 0,0, simulation.gameMap.scale*simulation.gameMap.getWidth(), simulation.gameMap.scale*simulation.gameMap.getHeight(), null);
 
 		if(stats != 0) {
-			if(stats != 2)
-				// Rysowanie liczby ticków
-				g.drawChars(("Tick: " + simulation.tick).toCharArray(), 0, ("Tick: " + simulation.tick).length(), 10, 15);
-			else {
-				// Rysowanie liczby sekund
-				long simulationTime = (System.currentTimeMillis() - simulationStartTime) / 1000;
-				g.drawChars(("Time: " + simulationTime).toCharArray(), 0, ("Time: " + simulationTime).length(), 10, 15);
-			}
+//			if(stats != 2)
+
+			// Rysowanie liczby ticków
+			g.drawChars(("Tick: " + simulation.tick).toCharArray(), 0, ("Tick: " + simulation.tick).length(), 10, 15);
+//
+//			else {
+//				// Rysowanie liczby sekund
+//				long simulationTime = (System.currentTimeMillis() - simulationStartTime) / 1000;
+//				g.drawChars(("Time: " + simulationTime).toCharArray(), 0, ("Time: " + simulationTime).length(), 10, 15);
+//			}
 			// Rysowanie liczby mrówek
 			g.drawChars(("Ants: " + Ant.antCounter).toCharArray(), 0, ("Ants: " + Ant.antCounter).length(), 10, 30);
 			// Rysowanie liczby jedzenia w mrowisku
@@ -92,11 +85,10 @@ public class Display extends JPanel implements KeyListener {
 			System.exit(0);
 
 		if (e.getKeyCode() == KeyEvent.VK_F3 || e.getKeyChar() == 'i') {
-			stats = (stats + 1) % 3;
+			stats = (stats + 1) % 2;
 			System.out.println(stats);
 		}
 
-		// nie działa na nowej wersji
 //		if (e.getKeyChar() == 's') {
 //			simulation.isPaused = true;
 //            SaveHandler.save(simulation);

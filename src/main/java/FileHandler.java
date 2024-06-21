@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-public class SaveHandler {
+public class FileHandler {
     public static void save(AntColony simulation)
     {
         String content = "";
@@ -21,7 +21,7 @@ public class SaveHandler {
             // zapis zapachów
         for (int i = 0; i < simulation.gameMap.getHeight(); i++) {
             for (int j = 0; j < simulation.gameMap.getWidth(); j++) {
-                content += simulation.gameMap.tiles[j][i].getAntScentValue() + "|";
+                content += simulation.gameMap.tiles[j][i].getAntScentValue() + ":" + simulation.gameMap.tiles[j][i].getFoodScentValue() + "|";
             }
             content += "\n";
         }
@@ -52,21 +52,15 @@ public class SaveHandler {
             if (height != simulation.gameMap.getHeight() || width != simulation.gameMap.getWidth()) return;
 
             simulation.random = new Random(Long.parseLong(reader.readLine()));
-//            simulation.random.setSeed(Long.parseLong(reader.readLine()));
             simulation.tick = Long.parseLong(reader.readLine());
 
             for (int i = 0; i < height; i++) {
                     // sczytanie z wiersza wartości
                 String row = reader.readLine();
-                String[] scentValuesS = row.split("\\|");
-                float[] scentValues = new float[scentValuesS.length];
-                for (int j = 0; j < scentValuesS.length; j++) {
-                    scentValues[j] = Float.parseFloat(scentValuesS[j]);
-                }
-
-                    // nadpisanie wartości
-                for (int j = 0; j < width; j++) {
-                    simulation.gameMap.tiles[j][i].setAntScentValue(scentValues[j]);
+                String[] scentValuesS = row.split("[|:]");
+                for (int j = 0; j < scentValuesS.length/2; j++) {
+                    simulation.gameMap.tiles[j][i].setAntScentValue(Float.parseFloat(scentValuesS[j]));
+                    simulation.gameMap.tiles[j][i].setFoodScentValue(Float.parseFloat(scentValuesS[j+1]));
                 }
             }
 
@@ -88,9 +82,19 @@ public class SaveHandler {
                                 Integer.parseInt(objectInfo[3]),
                                 simulation.random,
                                 simulation.gameMap,
+
                                 Boolean.parseBoolean(objectInfo[4]),
                                 Float.parseFloat(objectInfo[5]),
-                                Float.parseFloat(objectInfo[6])
+                                Float.parseFloat(objectInfo[6]),
+                                Float.parseFloat(objectInfo[7]),
+                                Float.parseFloat(objectInfo[8]),
+                                Float.parseFloat(objectInfo[9]),
+                                Float.parseFloat(objectInfo[10]),
+
+                                Integer.parseInt(objectInfo[11]),
+                                Integer.parseInt(objectInfo[12]),
+
+                                Integer.parseInt(objectInfo[13])
                         );
                         break;
                     case "class AntNest":

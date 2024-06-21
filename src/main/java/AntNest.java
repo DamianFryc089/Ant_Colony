@@ -75,28 +75,34 @@ public class AntNest extends Object {
 
 		int newX = startX;
 		int newY = startY;
-		do {
-			if(gameMap.tiles[newX][newY].cellOccupant == null){
-				gameMap.tiles[newX][newY].cellOccupant = new Ant(newX,newY,1, random, gameMap);
-				return;
-			}
-			if (newY == y-1){
-				newX++;
-				if (newX == x + size) newY++;
-			}
-			else if(newX == x+size){
-				newY++;
-				if (newY == y + size) newX--;
-			}
-			else if(newY == y + size){
-				newX--;
-				if (newX == x - 1) newY--;
-			}
-			else if(newX == x - 1){
-				newY--;
-				if (newY == y-1) newX++;
-			}
-		}while (startY != newY || startX != newX);
+
+		if(gameMap.tiles[newX][newY].cellOccupant == null || gameMap.tiles[newX][newY].cellOccupant.getClass() == Ant.class)
+			gameMap.tiles[newX][newY].cellOccupant = new Ant(newX,newY,1, random, gameMap);
+
+		// Jeżeli mrówki miałby się nie pojawiać na innych obiektach
+//		do {
+//			if(gameMap.tiles[newX][newY].cellOccupant == null){
+//				gameMap.tiles[newX][newY].cellOccupant = new Ant(newX,newY,1, random, gameMap);
+//				return;
+//			}
+//			if (newY == y-1){
+//				newX++;
+//				if (newX == x + size) newY++;
+//			}
+//			else if(newX == x+size){
+//				newY++;
+//				if (newY == y + size) newX--;
+//			}
+//			else if(newY == y + size){
+//				newX--;
+//				if (newX == x - 1) newY--;
+//			}
+//			else if(newX == x - 1){
+//				newY--;
+//				if (newY == y-1) newX++;
+//			}
+//		}while (startY != newY || startX != newX);
+
 	}
 
 	@Override

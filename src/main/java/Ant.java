@@ -17,15 +17,22 @@ public class Ant extends Object{
         xf=x;
         yf=y;
     }
-    Ant(int x, int y, int size, Random random, GameMap gameMap, boolean carryFood, float antScent, float foodScent)
+    Ant(int x, int y, int size, Random random, GameMap gameMap, boolean carryFood, float dx, float dy, float xf, float yf, float antScent, float foodScent, int lastAntPositionx, int lastAntPositiony, int randomMovement)
     {
         super(x, y, size, random, gameMap);
+
         this.carryFood = carryFood;
-        antCounter++;
-        xf=x;
-        yf=y;
+
+        this.dx = dx;
+        this.dy = dy;
+        this.xf = xf;
+        this.yf = yf;
         this.antScent = antScent;
         this.foodScent = foodScent;
+
+        this.lastAntPosition = new int[]{lastAntPositionx, lastAntPositiony};
+
+        this.randomMovement = randomMovement;
     }
 
     @Override
@@ -177,8 +184,15 @@ public class Ant extends Object{
     @Override
     public String toString() {
         return super.toString() +
-                "|" + carryFood+
-                "|" + antScent+
-                "|" + foodScent;
+                "|" + carryFood +
+                "|" + dx +
+                "|" + dy +
+                "|" + xf +
+                "|" + yf +
+                "|" + antScent +
+                "|" + foodScent +
+                "|" + lastAntPosition[0] +
+                "|" + lastAntPosition[1] +
+                "|" + randomMovement;
     }
 }

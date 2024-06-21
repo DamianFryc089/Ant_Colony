@@ -10,8 +10,8 @@ public class GameMap {
 	Random random;
 	ArrayList<Object> objects;
 	public final int scale;
-	int xn, yn, foodCooldown = 10000, foodTimer = 0;
-    private float scentFading = 0.9995F;
+	int foodCooldown, foodTimer = 0;
+    private int scentFading;
 
 	GameMap(Random random, ArrayList<Object> objects, int scale) {
 		this.random = random;
@@ -47,7 +47,9 @@ public class GameMap {
 		}
 	}
 
-	public void generateMap(int frameWidth, int frameHeight) {
+	public void generateMap(int frameWidth, int frameHeight, int[] simulationArgs) {
+		foodCooldown = simulationArgs[3];
+		scentFading = simulationArgs[4];
 		this.width = frameWidth/scale;
 		this.height = frameHeight/scale;
 		tiles = new Tile[width][height];
@@ -70,11 +72,12 @@ public class GameMap {
 				43 + random.nextInt(minRand,maxRand-minRand)));
 			}
 		}
-		xn = random.nextInt(width/10,width - width/5 - 25);
-		yn = random.nextInt(height/10,height - height/5 - 25);
+		int size = Math.min(25, Math.min(width,height) /12);
+		int xn = random.nextInt(width/10,width - width/5 - size);
+		int yn = random.nextInt(height/10,height - height/5 - size);
 		generateImage();
-		new AntNest(xn, yn,25, random, this, 0);
-		generateWalls(300);
+		new AntNest(xn, yn, size, random, this, 0);
+		generateWalls(simulationArgs[5]);
 	}
 
 	private void generateImage(){
@@ -112,14 +115,14 @@ public class GameMap {
 		for (int i=0; i<tiles.length; i++) {
 			for (int j=0; j<tiles[0].length; j++) {
 
-				tiles[i][j].antScentValue *= scentFading;
+				tiles[i][j].antScentValue *= (float) scentFading / 10000;
 				if (tiles[i][j].antScentValue > 5)
 					antScentImage.setRGB(i, j,	new Color(255, 0, 0, Math.min((int)(tiles[i][j].antScentValue*2.55),255)).getRGB());
 
 				if(tiles[i][j].antScentValue < 5)
 					tiles[i][j].antScentValue = 0;
 
-				tiles[i][j].foodScentValue *= scentFading;
+				tiles[i][j].foodScentValue *= (float) scentFading / 10000;
 				if (tiles[i][j].foodScentValue > 5)
 					foodScentImage.setRGB(i, j,	new Color(0, 0, 255, Math.min((int)(tiles[i][j].foodScentValue*2.55),255)).getRGB());
 
@@ -137,11 +140,12 @@ public class GameMap {
 			int verticalDirection = random.nextBoolean() ? -1 : 1;
 
 			while (true) {
+				count--;
 				if (randX < width && randY >= 0 && randY < height && tiles[randX][randY].cellOccupant == null) {
-					tiles[randX][randY].cellOccupant = new Wall(randX, randY, 1, random, this);
-					count--;
+					new Wall(randX, randY, 1, random, this);
 				}
-				else break;
+				else
+					break;
 
 					// losowanie kolejnego muru lub przerwy
 				int rand = random.nextInt(100);
@@ -155,12 +159,22 @@ public class GameMap {
 		int randX;
 		int randY;
 
+		int[] antNestPostion = {0,0};
+
+        for (Object object : objects) {
+            if (object.getClass() == AntNest.class) {
+				antNestPostion[0] = object.x;
+				antNestPostion[1] = object.y;
+				break;
+            }
+        }
+
 		int proba = 0;
 		do {
-			randX = random.nextInt(width/10, width - width/5);
-			randY = random.nextInt(height/10, height - height/5);
+			randX = random.nextInt(width/20, width - width/10);
+			randY = random.nextInt(height/20, height - height/10);
 			proba++;
-		}while (Math.abs(randX - xn) < width / (4+proba*0.1) && Math.abs(randY - yn) < height / (4+proba*0.1));
+		}while (Math.abs(randX - antNestPostion[0]) < width / (4+proba*0.1) && Math.abs(randY - antNestPostion[1]) < height / (4+proba*0.1));
 
 		for (int i = 0; i < size; i++) {
 			for (int j = size - i; j < size + i; j++) {
