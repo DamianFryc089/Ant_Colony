@@ -18,7 +18,7 @@ public class Display extends JPanel implements KeyListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 
-		if(simulationArgs[0] > 250 && simulationArgs[1] > 250) {
+		if(simulationArgs[0] > 100 && simulationArgs[1] > 100) {
 			// Okno w trybie okienkowym
 			frame.setSize(new Dimension(simulationArgs[0] + 16, simulationArgs[1] + 39));
 			frame.setVisible(true);

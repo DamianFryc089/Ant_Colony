@@ -1,9 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class AntColony{
     Random random;
@@ -82,7 +79,7 @@ public class AntColony{
 
     int[] handleArgs(String[] args) {
             // szerokość, wysokość, długość symulacji, odstęp tikowy pomiędzy nowym jedzeniem, szybkośc znikania zapachu, ilość ścian
-        int[] argsConverted = {0, 0, 25000, 10000, 9995, 300};
+        int[] argsConverted = {0, 0, 25000, 5000, 9995, 300};
 
             // szerokość
         if (args.length > 0){
