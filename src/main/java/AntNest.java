@@ -1,9 +1,24 @@
 import java.awt.*;
 import java.util.Random;
 
+/**
+ * The AntNest class represents the nest of the ants in the simulation.
+ * It manages the spawning of ants and the food supply in the nest.
+ */
 public class AntNest extends Object {
 	public static int foodInNest = 10;
 	private int ticksSinceFoodCheck;
+
+	/**
+	 * Constructs an AntNest with the specified parameters.
+	 *
+	 * @param x the x-coordinate of the nest
+	 * @param y the y-coordinate of the nest
+	 * @param size the size of the nest
+	 * @param random the random number generator
+	 * @param gameMap the game map
+	 * @param ticksSinceFoodCheck the number of ticks since the last food check
+	 */
 	AntNest(int x, int y, int size, Random random, GameMap gameMap, int ticksSinceFoodCheck)
 	{
 		super(x, y, size, random, gameMap);
@@ -13,6 +28,10 @@ public class AntNest extends Object {
 		this.ticksSinceFoodCheck = ticksSinceFoodCheck;
 	}
 
+	/**
+	 * The action method is called on each tick of the simulation.
+	 * It manages the food supply in the nest and spawns or kills ants accordingly.
+	 */
 	@Override
 	void action() {
 		ticksSinceFoodCheck++;
@@ -43,6 +62,9 @@ public class AntNest extends Object {
 		}
 	}
 
+	/**
+	 * Spawns a new ant at a random position around the nest.
+	 */
 	private void spawnAnt() {
 		int startX = x;
 		int startY = y-1;
@@ -105,9 +127,19 @@ public class AntNest extends Object {
 
 	}
 
+	/**
+	 * Gets the color of the nest.
+	 *
+	 * @return the color of the nest, which is brown
+	 */
 	@Override
 	public Color getColor() {return new Color(119, 52, 29);}
 
+	/**
+	 * Returns a string representation of the AntNest.
+	 *
+	 * @return a string representation of the AntNest
+	 */
 	@Override
 	public String toString() {
 		return super.toString() +

@@ -3,12 +3,22 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * The Display class represents the visual display of the ant colony simulation.
+ * It extends JPanel and implements KeyListener to handle user input for controlling the simulation.
+ */
 public class Display extends JPanel implements KeyListener {
 
 	private final AntColony simulation;
 	private int stats = 1;
 	private final long simulationStartTime = System.currentTimeMillis();
 
+	/**
+	 * Constructs a Display with the specified simulation arguments and AntColony instance.
+	 *
+	 * @param simulationArgs the simulation arguments
+	 * @param simulation the AntColony instance
+	 */
 	Display(int[] simulationArgs, AntColony simulation)
 	{
 		this.simulation = simulation;
@@ -39,6 +49,11 @@ public class Display extends JPanel implements KeyListener {
 		this.requestFocusInWindow();
 	}
 
+	/**
+	 * Paints the component by drawing the current state of the simulation.
+	 *
+	 * @param g the Graphics object used for drawing
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

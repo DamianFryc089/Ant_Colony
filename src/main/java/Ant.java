@@ -1,6 +1,11 @@
 import java.awt.*;
 import java.util.Random;
 
+/**
+ * The Ant class represents an ant in the simulation.
+ * It inherits from the Object class and has various attributes and behaviors
+ * specific to an ant, such as movement, carrying food, and leaving scents.
+ */
 public class Ant extends Object{
     static int antCounter = 0;
     public boolean carryFood = false;
@@ -11,30 +16,27 @@ public class Ant extends Object{
     private float foodScent = 100;
     private int[] lastAntPosition = new int[2];
     private int randomMovement = 0;
+
+    /**
+     * Constructs an Ant object with the specified initial position, size,
+     * random number generator, and game map.
+     *
+     * @param x       the initial x-coordinate of the ant
+     * @param y       the initial y-coordinate of the ant
+     * @param size    the size of the ant
+     * @param random  the random number generator
+     * @param gameMap the game map
+     */
     Ant(int x, int y, int size, Random random, GameMap gameMap) {
         super(x, y, size, random, gameMap);
         antCounter++;
         xf=x;
         yf=y;
     }
-    Ant(int x, int y, int size, Random random, GameMap gameMap, boolean carryFood, float dx, float dy, float xf, float yf, float antScent, float foodScent, int lastAntPositionx, int lastAntPositiony, int randomMovement)
-    {
-        super(x, y, size, random, gameMap);
 
-        this.carryFood = carryFood;
-
-        this.dx = dx;
-        this.dy = dy;
-        this.xf = xf;
-        this.yf = yf;
-        this.antScent = antScent;
-        this.foodScent = foodScent;
-
-        this.lastAntPosition = new int[]{lastAntPositionx, lastAntPositiony};
-
-        this.randomMovement = randomMovement;
-    }
-
+    /**
+     * Defines the action to be performed by the ant.
+     */
     @Override
     void action(){
         gameMap.takeObject(this);
@@ -108,6 +110,11 @@ public class Ant extends Object{
         if(x+1>gameMap.getWidth()||x<1||gameMap.getHeight()<y+1||y<1){x= gameMap.getWidth()/2;y= gameMap.getHeight()/2;}
         if(gameMap.tiles[x][y].cellOccupant==null || gameMap.tiles[x][y].cellOccupant.getClass()==Ant.class)gameMap.placeObject(this);
     }
+    /**
+     * Determines whether the ant is close to the ant nest or food.
+     *
+     * @return true if the ant is close to the ant nest or food, false otherwise
+     */
     private boolean BiteAndSpit()
     {
         if(!carryFood) {
@@ -154,6 +161,11 @@ public class Ant extends Object{
         }
         return theMaxScent;
     }
+    /**
+     * Searches for the strongest ant scent near the ant's current position.
+     *
+     * @return an array with two elements indicating the direction of the strongest ant scent
+     */
     int[] searchForAntScent() {
         float scent = 0;
         float maxScent = 0;
@@ -172,15 +184,29 @@ public class Ant extends Object{
         }
         return theMaxScent;
     }
+
+    /**
+     * Gets the color of the ant.
+     *
+     * @return the color of the ant, which is black
+     */
     @Override
     public Color getColor() {return new Color(0,0,0);}
 
+    /**
+     * Handles the death of the ant.
+     */
     @Override
     void death() {
         super.death();
         antCounter--;
     }
 
+    /**
+     * Returns a string representation of the ant.
+     *
+     * @return a string containing the ant's attributes
+     */
     @Override
     public String toString() {
         return super.toString() +

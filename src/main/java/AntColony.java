@@ -2,6 +2,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * The AntColony class represents a simulation of an ant colony.
+ */
 public class AntColony{
     Random random;
     long seed;
@@ -15,6 +18,16 @@ public class AntColony{
     boolean isPaused = false;
     private Timer timer;
 
+    /**
+     * Creates an AntColony simulation with specified arguments such as:
+     * - window width, window height,
+     * - simulation tick limit,
+     * - frequency of food appearing on the map,
+     * - rate of disappearance of food and ant scents,
+     * - number of walls on the map.
+     *
+     * @param args the arguments for the simulation configuration
+     */
     public AntColony(String[] args) {
 
         int[] simulationArgs = handleArgs(args);
@@ -36,7 +49,9 @@ public class AntColony{
         timer.schedule(new MainLoop(), 0, (long) 1000/(int)targetFPS);
     }
 
-
+    /**
+     * The MainLoop class represents the main simulation loop.
+     */
     public class MainLoop extends TimerTask {
         @Override
         public void run() {
@@ -58,7 +73,9 @@ public class AntColony{
 
         }
     }
-
+    /**
+     * Saves the results of the simulation to a file.
+     */
     private void saveResults()
     {
         try (FileWriter writer = new FileWriter("results.txt")) {
@@ -70,6 +87,9 @@ public class AntColony{
         }
     }
 
+    /**
+     * Updates the max amount of frames per second (FPS) of the simulation.
+     */
     public void updateFPS()
     {
         if (timer != null) timer.cancel();
@@ -77,6 +97,12 @@ public class AntColony{
         timer.schedule(new MainLoop(), 0, (long) 1000/(int)targetFPS);
     }
 
+    /**
+     * Handles the command-line arguments and converts them into simulation parameters.
+     *
+     * @param args the command-line arguments
+     * @return an array of integers representing the simulation correct parameters
+     */
     int[] handleArgs(String[] args) {
             // szerokość, wysokość, długość symulacji, odstęp tikowy pomiędzy nowym jedzeniem, szybkośc znikania zapachu, ilość ścian
         int[] argsConverted = {0, 0, 25000, 5000, 9995, 300};
@@ -128,6 +154,12 @@ public class AntColony{
         }
         return argsConverted;
     }
+
+    /**
+     * The main method to start the ant colony simulation.
+     *
+     * @param args the command-line arguments for the simulation
+     */
     public static void main(String[] args) {
         AntColony simulation = new AntColony(args);
     }

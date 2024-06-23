@@ -3,6 +3,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * The GameMap class represents the game map where ants and other objects interact.
+ * It manages the tiles, scents, objects, and various simulation mechanics.
+ */
 public class GameMap {
 	private int width, height;
 	public Tile[][] tiles;
@@ -13,12 +17,22 @@ public class GameMap {
 	int foodCooldown, foodTimer = 0;
     private int scentFading;
 
+	/**
+	 * Constructs a GameMap object.
+	 *
+	 * @param random the Random instance used for randomness
+	 * @param objects the list of objects on the game map
+	 * @param scale the scale of the game map
+	 */
 	GameMap(Random random, ArrayList<Object> objects, int scale) {
 		this.random = random;
 		this.objects = objects;
 		this.scale = scale;
 	}
 
+	/**
+	 * The Tile class represents a single tile on the game map.
+	 */
 	public class Tile{
 		private final int x, y;
 		private float antScentValue;
@@ -26,20 +40,55 @@ public class GameMap {
 		public Object cellOccupant;
 		Color tileColor;
 
+		/**
+		 * Constructs a Tile object.
+		 *
+		 * @param x the x-coordinate of the tile
+		 * @param y the y-coordinate of the tile
+		 */
 		Tile(int x, int y) {
 			this.x = x;
 			this.y = y;
 			antScentValue = 0.0F;
 			cellOccupant = null;
 		}
+		/**
+		 * Sets the color of the tile.
+		 *
+		 * @param newTileColor the new color of the tile
+		 */
 		void setTileColor(Color newTileColor) {tileColor = newTileColor;}
+
+		/**
+		 * Gets the ant scent value of the tile.
+		 *
+		 * @return the ant scent value
+		 */
 		float getAntScentValue() {return antScentValue;}
+
+		/**
+		 * Gets the food scent value of the tile.
+		 *
+		 * @return the food scent value
+		 */
 		float getFoodScentValue() {return foodScentValue;}
+
+		/**
+		 * Sets the ant scent value of the tile and updates the scent image.
+		 *
+		 * @param value the new ant scent value
+		 */
 		void setAntScentValue(float value)
 		{
 			antScentValue = Math.max(antScentValue, value);
 			antScentImage.setRGB(x, y,	new Color(255, 0, 0, Math.min((int)(antScentValue*2.55),255)).getRGB());
 		}
+
+		/**
+		 * Sets the food scent value of the tile and updates the scent image.
+		 *
+		 * @param value the new food scent value
+		 */
 		void setFoodScentValue(float value)
 		{
 			foodScentValue = Math.max(foodScentValue, value);
@@ -47,6 +96,13 @@ public class GameMap {
 		}
 	}
 
+	/**
+	 * Generates the game map with specified dimensions and simulation arguments.
+	 *
+	 * @param frameWidth the width of the frame
+	 * @param frameHeight the height of the frame
+	 * @param simulationArgs the simulation arguments
+	 */
 	public void generateMap(int frameWidth, int frameHeight, int[] simulationArgs) {
 		foodCooldown = simulationArgs[3];
 		scentFading = simulationArgs[4];
@@ -80,6 +136,9 @@ public class GameMap {
 		generateWalls(simulationArgs[5]);
 	}
 
+	/**
+	 * Generates the background image for the game map.
+	 */
 	private void generateImage(){
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
@@ -88,11 +147,39 @@ public class GameMap {
 		}
 	}
 
+	/**
+	 * Gets the background image of the game map.
+	 *
+	 * @return the background image
+	 */
 	public BufferedImage getBackgroundImage() {return backgroundImage;}
+
+	/**
+	 * Gets the food scent image of the game map.
+	 *
+	 * @return the food scent image
+	 */
 	public BufferedImage getFoodScentImage() {return foodScentImage;}
+
+	/**
+	 * Gets the ant scent image of the game map.
+	 *
+	 * @return the ant scent image
+	 */
 	public BufferedImage getAntScentImage() {return antScentImage;}
+
+	/**
+	 * Gets the objects image of the game map.
+	 *
+	 * @return the objects image
+	 */
 	public BufferedImage getObjectsImage() {return objectsImage;}
 
+	/**
+	 * Removes an object from the game map.
+	 *
+	 * @param objectToTake the object to remove
+	 */
 	public void takeObject(Object objectToTake){
 		for(int x = 0; x < objectToTake.getSize(); x++){
 			for(int y = 0; y < objectToTake.getSize(); y++){
@@ -102,6 +189,11 @@ public class GameMap {
 		}
 	}
 
+	/**
+	 * Places an object on the game map.
+	 *
+	 * @param objectToPlace the object to place
+	 */
 	public void placeObject(Object objectToPlace){
 		for(int x = 0; x < objectToPlace.getSize(); x++){
 			for(int y = 0; y < objectToPlace.getSize(); y++){
@@ -111,6 +203,9 @@ public class GameMap {
 		}
 	}
 
+	/**
+	 * Decreases the scent values on the game map over time.
+	 */
 	void decreaseScentValues() {
 		for (int i=0; i<tiles.length; i++) {
 			for (int j=0; j<tiles[0].length; j++) {
@@ -132,6 +227,11 @@ public class GameMap {
 		}
 	}
 
+	/**
+	 * Generates walls on the game map.
+	 *
+	 * @param count the number of walls to generate
+	 */
 	private void generateWalls(int count){
 		while (count > 0) {
 			int randX = random.nextInt(width);
@@ -155,6 +255,13 @@ public class GameMap {
 			}
 		}
 	}
+
+
+	/**
+	 * Generates food field on the game map.
+	 *
+	 * @param size the size of diamond-shaped food field
+	 */
 	public void generateFoodField(int size){
 		int randX;
 		int randY;
@@ -187,6 +294,14 @@ public class GameMap {
 			}
 		}
 	}
+
+
+	/**
+	 * Generates food if a tile isn't occupied.
+	 *
+	 * @param x the x-coordinate of the food
+	 * @param y the y-coordinate of the food
+	 */
 	private void generateFood(int x, int y)
 	{
 		if (x >= 0 && x < width && y >= 0 && y < height && tiles[x][y].cellOccupant == null) {
@@ -194,7 +309,18 @@ public class GameMap {
 		}
 	}
 
+	/**
+	 * Returns the width of the map.
+	 *
+	 * @return the width of the map
+	 */
 	public int getWidth(){return width;}
+
+	/**
+	 * Returns the height of the map.
+	 *
+	 * @return the height of the map
+	 */
 	public int getHeight(){return height;}
 
 }
