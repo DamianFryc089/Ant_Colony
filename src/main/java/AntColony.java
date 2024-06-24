@@ -12,18 +12,19 @@ public class AntColony{
     private final Display display;
     public final GameMap gameMap;
     float targetFPS = 60;
-    final int scale = 4;
+    final int scale = 3;
     long tick = 0;
     long simulationEndTime;
     boolean isPaused = false;
     private Timer timer;
 
     /**
-     * Creates an AntColony simulation with specified arguments such as:
-     * - window width, window height,
-     * - simulation tick limit,
-     * - frequency of food appearing on the map,
-     * - rate of disappearance of food and ant scents,
+     * Creates an AntColony simulation with specified arguments such as:<br>
+     * - window width, <br>
+     * - window height,<br>
+     * - simulation tick limit,<br>
+     * - frequency of food appearing on the map,<br>
+     * - rate of disappearance of food and ant scents,<br>
      * - number of walls on the map.
      *
      * @param args the arguments for the simulation configuration
@@ -74,7 +75,8 @@ public class AntColony{
         }
     }
     /**
-     * Saves the results of the simulation to a file.
+     * Saves the results of the simulation to a file "results.txt".
+     * Will overwrite data if the file is already created.
      */
     private void saveResults()
     {
@@ -89,6 +91,7 @@ public class AntColony{
 
     /**
      * Updates the max amount of frames per second (FPS) of the simulation.
+     * The maximum frame rate is 1000, but with a larger simulation map the actual FPS will not exceed 200.
      */
     public void updateFPS()
     {
@@ -99,13 +102,14 @@ public class AntColony{
 
     /**
      * Handles the command-line arguments and converts them into simulation parameters.
+     * If user parameters are not passed or are invalid, default values will be used
      *
      * @param args the command-line arguments
      * @return an array of integers representing the simulation correct parameters
      */
     int[] handleArgs(String[] args) {
             // szerokość, wysokość, długość symulacji, odstęp tikowy pomiędzy nowym jedzeniem, szybkośc znikania zapachu, ilość ścian
-        int[] argsConverted = {0, 0, 25000, 5000, 9995, 300};
+        int[] argsConverted = {750, 750, 25000, 5000, 9995, 300};
 
             // szerokość
         if (args.length > 0){
@@ -157,6 +161,7 @@ public class AntColony{
 
     /**
      * The main method to start the ant colony simulation.
+     * Captures the passed arguments from Gradle and passes them to the simulation constructor
      *
      * @param args the command-line arguments for the simulation
      */

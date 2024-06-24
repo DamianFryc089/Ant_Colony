@@ -14,7 +14,7 @@ public class Display extends JPanel implements KeyListener {
 	private final long simulationStartTime = System.currentTimeMillis();
 
 	/**
-	 * Constructs a Display with the specified simulation arguments and AntColony instance.
+	 * Constructs a Display with the specified width and height
 	 *
 	 * @param simulationArgs the simulation arguments
 	 * @param simulation the AntColony instance
@@ -103,17 +103,6 @@ public class Display extends JPanel implements KeyListener {
 			stats = (stats + 1) % 2;
 			System.out.println(stats);
 		}
-
-//		if (e.getKeyChar() == 's') {
-//			simulation.isPaused = true;
-//            SaveHandler.save(simulation);
-//			simulation.isPaused = false;
-//		}
-//		if (e.getKeyChar() == 'l') {
-//			simulation.isPaused = true;
-//			SaveHandler.load(simulation);
-//			repaint();
-//		}
 
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			simulation.targetFPS = Math.min(1000, simulation.targetFPS*11/10);

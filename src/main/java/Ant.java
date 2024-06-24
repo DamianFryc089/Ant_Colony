@@ -35,7 +35,7 @@ public class Ant extends Object{
     }
 
     /**
-     * Defines the action to be performed by the ant.
+     * Defines the action to be performed by the ant, which is finding and gathering food.
      */
     @Override
     void action(){

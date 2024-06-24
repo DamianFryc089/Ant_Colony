@@ -32,6 +32,7 @@ public class GameMap {
 
 	/**
 	 * The Tile class represents a single tile on the game map.
+	 * It stores the values of ant and food scents and a reference to the object that occupies it.
 	 */
 	public class Tile{
 		private final int x, y;
