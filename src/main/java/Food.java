@@ -6,10 +6,7 @@ import java.util.Random;
  * It extends the Object class and manages food-related attributes and behaviors.
  */
 public class Food extends Object{
-	/** The counter for the total amount of food in the simulation. */
 	public static int foodCounter = 0;
-
-	/** The value of the food, representing the amount of food available. */
 	private int foodValue;
 
 	/**
